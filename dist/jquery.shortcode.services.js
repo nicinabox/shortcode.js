@@ -4,6 +4,7 @@
   shortcode.js Services
   Collection of shortcode replacements
   by Nic Aitch @nicinabox
+  MIT License
 */
 
 
