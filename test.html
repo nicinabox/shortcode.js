@@ -8,7 +8,7 @@
         $('body').shortcode({
           change_el: function(options, el) {
             var markup = "" +
-              "<aside>html Manipulation</aside>";
+              "<aside class='replacement'>html Manipulation</aside>";
 
               $('h1', el).each(function() {
                 var id = $(this).text()
@@ -25,17 +25,25 @@
           },
           string: function(options, el) {
             var markup = "" +
-              "<h3 id=" + options.id + ">String</h3>";
+              "<h3 id=" + options.id + " class='replacement'>String</h3>";
             return markup;
           },
           object: function(options, el) {
             var markup = "" +
-              "<h3 data-size='" + options.size + "'>jQuery Object</h3>";
+              "<h3 data-size='" + options.size + "' class='replacement'>jQuery Object</h3>";
             return $(markup);
           }
         });
       });
     </script>
+    <style type="text/css">
+      body {
+        font-family: Helvetica;
+      }
+      .replacement {
+        color: red;
+      }
+    </style>
   </head>
   <body>
 
