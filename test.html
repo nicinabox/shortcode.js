@@ -7,18 +7,20 @@
       $(function() {
         $('body').shortcode({
           change_el: function(options, el) {
-            var markup = "" +
-              "<aside class='replacement'>html Manipulation</aside>";
+            var $markup = $("<nav class='replacement'></nav>");
 
               $('h1', el).each(function() {
-                var id = $(this).text()
-                                .toLowerCase()
-                                .replace(/[^\s\w]/g, '')
-                                .replace(/\s/g, '-')
+                var text = $(this).text(),
+                    id   = text
+                            .toLowerCase()
+                            .replace(/[^\s\w]/g, '')
+                            .replace(/\s/g, '-')
                 $(this).attr('id', id);
+
+                $markup.append("<a href='#" + id + "'>" + text + "</a>");
               });
 
-            return markup;
+            return $markup;
           },
           string: function(options, el) {
             var markup = "" +
