@@ -4,8 +4,12 @@
   $.fn.shortcode.services = {
     overview: function(options, el) {
       var $markup;
-      $markup = $("<nav class='replacement'></nav>");
-      $(options.el, el).each(function() {
+      options = $.extend({
+        target: "h2",
+        "class": "overview"
+      }, options);
+      $markup = $("<nav class='" + options["class"] + "'>");
+      $(options.target, el).each(function() {
         var id, text;
         text = $(this).text();
         id = text.toLowerCase().replace(/[^\s\w]/g, '').replace(/\s/g, '-');
