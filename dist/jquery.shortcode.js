@@ -16,10 +16,10 @@
       return services[code](options, el);
     };
     return this.each(function() {
-      var html, replace_with,
+      var html, replacement,
         _this = this;
       html = $(this).html();
-      replace_with = '';
+      replacement = '';
       return $.each(services, function(shortcode) {
         var crude_options, match, options, regex;
         regex = new RegExp("\\[" + shortcode + "(.*?)?\\]", "g");
@@ -33,13 +33,13 @@
             return options[opts[0]] = opts[1].replace(/"/g, '');
           });
         }
-        replace_with = run(shortcode, options, _this);
+        replacement = run(shortcode, options, _this);
         html = $(_this).html();
-        if (replace_with.jquery) {
-          replace_with = replace_with[0].outerHTML;
+        if (replacement.jquery) {
+          replacement = replacement[0].outerHTML;
         }
-        if (replace_with) {
-          html = html.replace(regex, replace_with);
+        if (replacement) {
+          html = html.replace(regex, replacement);
           return $(_this).html(html);
         }
       });

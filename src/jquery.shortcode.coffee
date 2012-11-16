@@ -5,19 +5,25 @@
 ###
 
 $.fn.shortcode = (services) ->
+
+  # Extend from external or arguments
   services = $.extend {}, $.fn.shortcode.services, services
 
   run = (code, options, el) ->
     services[code](options, el)
 
   this.each ->
-    html         = $(this).html()
-    replace_with = ''
+    html        = $(this).html()
+    replacement = ''
 
+    # Loop through all services
     $.each services, (shortcode) =>
+
+      # The key is what we want to match
       regex   = new RegExp "\\[#{shortcode}(.*?)?\\]", "g"
       options = {}
 
+      # Parse options from capture group
       match = regex.exec html
       if match[1]
         crude_options = $.trim(match[1]).split(' ')
@@ -26,12 +32,17 @@ $.fn.shortcode = (services) ->
           opts             = crude_options[i].split("=")
           options[opts[0]] = opts[1].replace(/"/g, '')
 
-      replace_with = run shortcode, options, this
-      html         = $(this).html()
+      # Run shortcode function for replacement
+      replacement = run shortcode, options, this
 
-      if replace_with.jquery
-        replace_with = replace_with[0].outerHTML
+      # Recapture html in case shortcode changed the DOM
+      html = $(this).html()
 
-      if replace_with
-        html = html.replace(regex, replace_with)
+      # Handle returned jQuery object
+      if replacement.jquery
+        replacement = replacement[0].outerHTML
+
+      # Replace shortcode and inject into DOM
+      if replacement
+        html = html.replace(regex, replacement)
         $(this).html html
