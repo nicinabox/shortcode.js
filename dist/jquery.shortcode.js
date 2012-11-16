@@ -2,7 +2,7 @@
 
 /*
   Shortcode.js 1.0
-  Replace Wordpress style shortcodes with HTML on the fly
+  Replace Wordpress-style shortcodes with HTML on the fly
   by Nic Aitch @nicinabox
 */
 
@@ -20,7 +20,7 @@
         _this = this;
       html = $(this).html();
       replace_with = '';
-      $.each(services, function(shortcode) {
+      return $.each(services, function(shortcode) {
         var crude_options, match, options, regex;
         regex = new RegExp("\\[" + shortcode + "(.*?)?\\]", "g");
         options = {};
@@ -34,17 +34,15 @@
           });
         }
         replace_with = run(shortcode, options, _this);
+        html = $(_this).html();
         if (replace_with.jquery) {
           replace_with = replace_with[0].outerHTML;
-        } else if (typeof replace_with === "object") {
-          html = replace_with.html;
-          replace_with = replace_with.replacement;
         }
         if (replace_with) {
-          return html = html.replace(regex, replace_with);
+          html = html.replace(regex, replace_with);
+          return $(_this).html(html);
         }
       });
-      return $(this).html(html);
     });
   };
 
