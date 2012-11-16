@@ -1,5 +1,5 @@
 ###
-  Shortcode.js 0.9
+  shortcode.js 0.9
   Replace Wordpress-style shortcodes with HTML on the fly
   by Nic Aitch @nicinabox
 ###
