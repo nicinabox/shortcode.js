@@ -5,7 +5,7 @@
 ###
 
 $.fn.shortcode = (services) ->
-  services = $.extend {}, services
+  services = $.extend {}, $.fn.shortcode.services, services
 
   run = (code, options, el) ->
     services[code](options, el)

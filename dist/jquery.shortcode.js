@@ -11,7 +11,7 @@
 
   $.fn.shortcode = function(services) {
     var run;
-    services = $.extend({}, services);
+    services = $.extend({}, $.fn.shortcode.services, services);
     run = function(code, options, el) {
       return services[code](options, el);
     };
