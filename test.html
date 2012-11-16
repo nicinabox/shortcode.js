@@ -18,10 +18,7 @@
                 $(this).attr('id', id);
               });
 
-            return {
-              html: $(el).html(),
-              replacement: markup
-            };
+            return markup;
           },
           string: function(options, el) {
             var markup = "" +
