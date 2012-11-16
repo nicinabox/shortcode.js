@@ -17,6 +17,35 @@
         return $markup.append("<a href='#" + id + "'>" + text + "</a>");
       });
       return $markup;
+    },
+    wufoo: function(options, el) {
+      var markup, par, scr, script;
+      options = $.merge({
+        userName: options.username,
+        formHash: options.formhash,
+        async: true
+      }, options);
+      delete options.username;
+      delete options.formhash;
+      script = document.createElement('script');
+      script.src = ("https:" === document.location.protocol ? "https://" : "http://") + "wufoo.com/scripts/embed/form.js";
+      script.onload = script.onreadystatechange = function() {
+        var form, rs;
+        rs = this.readyState;
+        if ((rs ? rs !== "complete" : void 0) ? rs !== "loaded" : void 0) {
+          return;
+        }
+        try {
+          form = new WufooForm();
+          form.initialize(options);
+          return form.display();
+        } catch (_error) {}
+      };
+      scr = document.getElementsByTagName('script')[0];
+      par = scr.parentNode;
+      par.insertBefore(script, scr);
+      markup = ("<div id='wufoo-" + options.formHash + "'>") + ("Fill out my <a href='http://" + options.userName + ".wufoo.com/forms/" + options.formHash + "'>online form</a>.") + "</div>";
+      return markup;
     }
   };
 

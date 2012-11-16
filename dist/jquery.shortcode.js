@@ -25,7 +25,7 @@
         regex = new RegExp("\\[" + shortcode + "(.*?)?\\]", "g");
         options = {};
         match = regex.exec(html);
-        if (match[1]) {
+        if (match && match[1]) {
           crude_options = $.trim(match[1]).split(' ');
           $.each(crude_options, function(i) {
             var opts;
