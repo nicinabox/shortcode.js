@@ -52,7 +52,7 @@
       scr = document.getElementsByTagName('script')[0];
       par = scr.parentNode;
       par.insertBefore(script, scr);
-      markup = ("<div id='wufoo-" + options.formHash + "'>") + ("Fill out my <a href='http://" + options.userName + ".wufoo.com/forms/" + options.formHash + "'>online form</a>.") + "</div>";
+      markup = "<div id=\"wufoo-" + options.formHash + "\">\n  Fill out my <a href=\"http://" + options.userName + ".wufoo.com/forms/" + options.formHash + "\">online form</a>.\n</div>";
       return markup;
     }
   };
