@@ -25,7 +25,7 @@ $.fn.shortcode = (services) ->
 
       # Parse options from capture group
       match = regex.exec html
-      if match[1]
+      if match && match[1]
         crude_options = $.trim(match[1]).split(' ')
 
         $.each crude_options, (i) ->
