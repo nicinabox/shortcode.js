@@ -4,24 +4,25 @@ shortcode.js will enable you to parse Wordpress-style shortcodes in a page and r
 
 This is extremely powerful when combined with a WYSIWYM/G editor. A user editing a page could simply drop in a predefined shortcode and have rich functionality on the frontend.
 
-## Usage
-
 shortcode.js ships with some default services. You may use them as you wish. Defining one with the same name will override an existing one.
+
+## Usage
 
 It takes a hash of methods where the keys are the shortcode. The item that you selected will have it's html replaced.
 
 ``` javascript
 $('selector').shortcode({
-  find_me: function(options, el) {
+  find_me: function(el, options, content) {
     return "replace with me";
   }
 });
 ```
 
-Each method accepts 2 arguments:
+Each method accepts 3 arguments:
 
-  * `options` - a hash of options created from attributes in the shortcode string
   * `el` - a reference to the selected element. Useful for scoping queries to further manipulate the DOM (see [Example C](#example-c)).
+  * `options` - a hash of options created from attributes in the shortcode string
+  * `content` - if you use a shortcode with a closing tag, the inner content will be available here
 
 ### Example A
 
@@ -41,7 +42,7 @@ Find `[gallery id="123" size="medium"]` and replace with some html.
 
 ``` javascript
 $("#main").shortcode({
-  gallery: function(options) {
+  gallery: function(el, options) {
     return "<div id='" + options.id + "' data-size='" + options.size + "'></div>";
   }
 });
@@ -53,7 +54,7 @@ Find `[overview target="h2"]` and build a table of contents based on `h2`s in th
 
 ``` javascript
 $("#main").shortcode({
-  overview: function(options, el) {
+  overview: function(el, options) {
     var $markup;
 
     options = $.extend({
@@ -72,6 +73,18 @@ $("#main").shortcode({
     });
 
     return $markup;
+  }
+});
+```
+
+### Example D
+
+Use a shortcode with a closing tag ([content]Cool content[/content]).
+
+``` javascript
+$("#main").shortcode({
+  content: function(el, options, content) {
+    return "<p>" + content + "</p>";
   }
 });
 ```
