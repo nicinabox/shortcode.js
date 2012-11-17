@@ -6,7 +6,7 @@
 ###
 
 $.fn.shortcode.services =
-  overview: (options, el) ->
+  overview: (el, options) ->
     options = $.extend
       target: "h2"
       class: "overview"
@@ -25,7 +25,7 @@ $.fn.shortcode.services =
 
     $markup
 
-  wufoo: (options, el) ->
+  wufoo: (el, options) ->
     options = $.merge
       userName: options.username,
       formHash: options.formhash,
