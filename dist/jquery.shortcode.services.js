@@ -11,7 +11,7 @@
 (function() {
 
   $.fn.shortcode.services = {
-    overview: function(options, el) {
+    overview: function(el, options) {
       var $markup;
       options = $.extend({
         target: "h2",
@@ -27,7 +27,7 @@
       });
       return $markup;
     },
-    wufoo: function(options, el) {
+    wufoo: function(el, options) {
       var markup, par, scr, script;
       options = $.merge({
         userName: options.username,
