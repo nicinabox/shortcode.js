@@ -7,15 +7,18 @@
     <script type="text/javascript">
       $(function() {
         $('body').shortcode({
-          string: function(options, el) {
+          string: function(el, options) {
             var markup = "" +
               "<h3 id=" + options.id + " class='replacement'>String</h3>";
             return markup;
           },
-          object: function(options, el) {
+          object: function(el, options) {
             var markup = "" +
               "<h3 data-size='" + options.size + "' class='replacement'>jQuery Object</h3>";
             return $(markup);
+          },
+          explicit_closing: function(el, options, content) {
+            return "<em data-id='" + options.id + "'>" + content + "</em>"
           }
         });
       });
@@ -43,6 +46,8 @@
     <h2>Subheading 1</h2>
 
     [string id="123" size="medium"]
+
+    [explicit_closing id="123"]stuff in here to capture[/explicit_closing]
 
     <ol>
       <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
