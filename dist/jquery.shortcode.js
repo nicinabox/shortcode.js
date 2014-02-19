@@ -23,7 +23,7 @@
       replacement = '';
       return $.each(services, function(shortcode) {
         var content, crude_options, match, options, regex, regexs;
-        regexs = ["\\[" + shortcode + "(.*?)?\\](.*)?\\[\\/" + shortcode + "\\]", "\\[" + shortcode + "(.*?)?\\]"];
+        regexs = ["\\[" + shortcode + "(.*?)?\\](.*?)?\\[\\/" + shortcode + "\\]", "\\[" + shortcode + "(.*?)?\\]"];
         options = {};
         crude_options = '';
         content = '';
