@@ -1,0 +1,19 @@
+{
+  "name": "shortcode.js",
+  "version": "0.0.0",
+  "authors": [
+    "Nic Aitch <nic@nicinabox.com>"
+  ],
+  "description": "Replace wordpress-style shortcode strings with anything",
+  "main": "src/shortcode.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}
