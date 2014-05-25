@@ -64,6 +64,21 @@ describe('Shortcode', function() {
     });
   });
 
-  it('replaces tag with matching object result');
+  it('replaces tag with matching object result', function() {
+    var contents = '' +
+    '<div class="fixture">' +
+      '[hello text="Hello world"]' +
+    '</div>';
+    var $contents = $(contents);
+
+    var sc = new Shortcode($contents, {
+      hello: function(options) {
+        return options.text;
+      }
+    });
+
+    expect($contents.html()).toEqual('Hello world');
+  });
+
   it('asynchronously replaces tag with matching object result');
 });
