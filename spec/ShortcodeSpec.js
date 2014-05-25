@@ -100,6 +100,31 @@ describe('Shortcode', function() {
       done();
     }, 1);
   });
+
+  it('supports DOM manipulation before return', function() {
+    var contents = '' +
+    '<div>' +
+      '[overview target="h2"]' +
+      '<h2>One</h2>' +
+      '<h2>Two</h2>' +
+      '<h2>Three</h2>' +
+    '</div>';
+    var $contents = $(contents);
+    var sc = new Shortcode($contents, {
+      overview: function(options) {
+        $contents.find(options.target).each(function(index, el) {
+          var id = $(el).text().toLowerCase().replace(' ', '-')
+          $(this).attr('id', id);
+        });
+
+        return '<div id="overview">Overview</div>';
+      }
+    });
+
+    console.log($contents.html());
+    expect($contents.find('h2').first().attr('id')).toEqual('one');
+
+  });
 });
 
 describe('jQuery plugin', function() {

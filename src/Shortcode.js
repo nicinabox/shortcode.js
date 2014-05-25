@@ -38,12 +38,11 @@ Shortcode.prototype.matchTags = function() {
 };
 
 Shortcode.prototype.replaceMatches = function() {
-  var self = this,
-      html = this.el.innerHTML;
+  var self = this, html;
 
   var done = function(result) {
-    html = html.replace(self.matches[key].regex, result);
-    self.el.innerHTML = html;
+    html = self.el.innerHTML;
+    self.el.innerHTML = html.replace(self.matches[key].regex, result);
   };
 
   for (var key in this.matches) {
