@@ -82,12 +82,14 @@ Shortcode.prototype.template = function (s, d) {
 };
 
 // jQuery plugin wrapper
-var pluginName = 'shortcode';
-$.fn[pluginName] = function (tags) {
-  this.each(function() {
-    if (!$.data(this, pluginName)) {
-      $.data(this, pluginName, new Shortcode(this, tags));
-    }
-  });
-  return this;
-};
+if (window.jQuery) {
+  var pluginName = 'shortcode';
+  $.fn[pluginName] = function (tags) {
+    this.each(function() {
+      if (!$.data(this, pluginName)) {
+        $.data(this, pluginName, new Shortcode(this, tags));
+      }
+    });
+    return this;
+  };
+}
