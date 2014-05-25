@@ -1,12 +1,16 @@
 /* jshint strict: false, unused: false */
 
 var Shortcode = function(el, tags) {
+  if (!el && !tags) { return; }
+
   this.el      = el;
   this.tags    = tags;
   this.matches = {};
   this.regex   = '\\[{tag}(.*?)?\\]';
 
-  if (!this.tags && !this.el) { return; }
+  if (this.el.jquery) {
+    this.el = this.el[0];
+  }
 
   this.matchTags();
   this.replaceMatches();
