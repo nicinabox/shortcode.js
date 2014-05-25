@@ -25,23 +25,47 @@ describe('Shortcode', function() {
   });
 
   it('matches defined tags', function() {
+    var body = document.querySelector('body');
     var contents = '' +
     '<div>' +
       '[hello]' +
     '</div>';
     $(contents).appendTo('body');
 
-    var body = document.querySelector('body');
     var sc = new Shortcode(body, {
       hello: function() {
         return ['Hello', 'world'].join(' ');
       }
     });
 
-    expect(sc.matches).toEqual(['hello']);
+    expect(sc.matches).toEqual({
+      hello: {
+        tag: 'hello',
+        options: undefined,
+        regex: /[hello]/
+      }
+    });
   });
 
-  it('converts tag options to object');
+  it('converts tag options to object', function() {
+    var body = document.querySelector('body');
+    var contents = '' +
+    '<div>' +
+      '[hello text="Hello world"]' +
+    '</div>';
+    $(contents).appendTo('body');
+
+    var sc = new Shortcode(body, {
+      hello: function(options) {
+        return options.text;
+      }
+    });
+
+    expect(sc.matches.hello.options).toEqual({
+      text: 'Hello world'
+    });
+  });
+
   it('replaces tag with matching object result');
   it('asynchronously replaces tag with matching object result');
 });
