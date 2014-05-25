@@ -101,3 +101,22 @@ describe('Shortcode', function() {
     }, 1);
   });
 });
+
+describe('jQuery plugin', function() {
+  it('initializes with jQuery', function() {
+    var contents = '' +
+      '<div>' +
+        '[hello text="Hello world"]' +
+      '</div>';
+    var $contents = $(contents);
+
+    $contents.shortcode({
+      hello: function(options) {
+        return options.text;
+      }
+    });
+
+    expect($contents.data('shortcode') instanceof Shortcode).toBe(true);
+    expect($contents.html()).toEqual('Hello world');
+  });
+});
