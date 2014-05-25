@@ -39,16 +39,23 @@ Shortcode.prototype.matchTags = function() {
 };
 
 Shortcode.prototype.replaceMatches = function() {
-  var html = this.el.innerHTML;
+  var self = this,
+      html = this.el.innerHTML;
+
+  var done = function(result) {
+    html = html.replace(self.matches[key].regex, result);
+    self.el.innerHTML = html;
+  };
 
   for (var key in this.matches) {
     if (this.matches.hasOwnProperty(key)) {
-      var result = this.tags[key](this.matches[key].options);
-      html = html.replace(this.matches[key].regex, result);
+      var result = this.tags[key](this.matches[key].options, done);
+
+      if (result) {
+        done(result);
+      }
     }
   }
-
-  this.el.innerHTML = html;
 };
 
 Shortcode.prototype.parseTagOptions = function(queryOptions) {

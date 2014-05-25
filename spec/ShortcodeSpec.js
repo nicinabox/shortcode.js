@@ -66,7 +66,7 @@ describe('Shortcode', function() {
 
   it('replaces tag with matching object result', function() {
     var contents = '' +
-    '<div class="fixture">' +
+    '<div>' +
       '[hello text="Hello world"]' +
     '</div>';
     var $contents = $(contents);
@@ -80,5 +80,24 @@ describe('Shortcode', function() {
     expect($contents.html()).toEqual('Hello world');
   });
 
-  it('asynchronously replaces tag with matching object result');
+  it('asynchronously replaces tag with matching object result', function(done) {
+    var contents = '' +
+    '<div>' +
+      '[hello text="Hello world"]' +
+    '</div>';
+    var $contents = $(contents);
+
+    var sc = new Shortcode($contents, {
+      hello: function(options, done) {
+        setTimeout(function() {
+          return done(options.text);
+        }, 0);
+      }
+    });
+
+    setTimeout(function() {
+      expect($contents.html()).toEqual('Hello world');
+      done();
+    }, 1);
+  });
 });
