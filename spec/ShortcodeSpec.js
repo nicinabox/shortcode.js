@@ -90,7 +90,7 @@ describe('Shortcode', function() {
     var sc = new Shortcode($contents, {
       hello: function(options, done) {
         setTimeout(function() {
-          return done(options.text);
+          done(options.text);
         }, 0);
       }
     });
