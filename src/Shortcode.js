@@ -26,7 +26,7 @@ Shortcode.prototype.matchTags = function() {
         this.matches[key] = {
           tag: key,
           options: match[1],
-          regex: new RegExp(match[0])
+          regex: match[0]
         };
         this.matches[key].options = this.parseTagOptions(this.matches[key].options);
       }
@@ -35,21 +35,16 @@ Shortcode.prototype.matchTags = function() {
 };
 
 Shortcode.prototype.replaceMatches = function() {
-  var html = this.el.innerHTML,
-      newHtml = '';
+  var html = this.el.innerHTML;
 
   for (var key in this.matches) {
     if (this.matches.hasOwnProperty(key)) {
-      // var result = this.tags[key]();
-
-      // newHtml = html
-      //   .replace(this.matches[key], this.tags[key]());
-
-      // console.log(regex, this.tags[key]());
+      var result = this.tags[key](this.matches[key].options);
+      html = html.replace(this.matches[key].regex, result);
     }
   }
 
-  // this.el.innerHTML = newHtml;
+  this.el.innerHTML = html;
 };
 
 Shortcode.prototype.parseTagOptions = function(queryOptions) {

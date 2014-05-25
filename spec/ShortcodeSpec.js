@@ -25,14 +25,13 @@ describe('Shortcode', function() {
   });
 
   it('matches defined tags', function() {
-    var body = document.querySelector('body');
     var contents = '' +
     '<div>' +
       '[hello]' +
     '</div>';
-    $(contents).appendTo('body');
+    var $contents = $(contents);
 
-    var sc = new Shortcode(body, {
+    var sc = new Shortcode($contents, {
       hello: function() {
         return ['Hello', 'world'].join(' ');
       }
@@ -42,20 +41,19 @@ describe('Shortcode', function() {
       hello: {
         tag: 'hello',
         options: undefined,
-        regex: /[hello]/
+        regex: '[hello]'
       }
     });
   });
 
   it('converts tag options to object', function() {
-    var body = document.querySelector('body');
     var contents = '' +
     '<div>' +
       '[hello text="Hello world"]' +
     '</div>';
-    $(contents).appendTo('body');
+    var $contents = $(contents)
 
-    var sc = new Shortcode(body, {
+    var sc = new Shortcode($contents, {
       hello: function(options) {
         return options.text;
       }
