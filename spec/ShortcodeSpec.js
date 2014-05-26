@@ -1,5 +1,5 @@
 /* jshint strict: false, unused: false */
-/* global Shortcode, describe, it, expect */
+/* global Shortcode, describe, it, expect, beforeEach, afterEach, loadFixtures */
 
 describe('Shortcode', function() {
   it('is a function', function() {
@@ -25,13 +25,9 @@ describe('Shortcode', function() {
   });
 
   it('matches defined tags', function() {
-    var contents = '' +
-    '<div>' +
-      '[hello]' +
-    '</div>';
-    var $contents = $(contents);
+    loadFixtures('basic.html');
 
-    var sc = new Shortcode($contents, {
+    var sc = new Shortcode($('#basic'), {
       hello: function() {
         return ['Hello', 'world'].join(' ');
       }
@@ -47,47 +43,37 @@ describe('Shortcode', function() {
   });
 
   it('converts tag options to object', function() {
-    var contents = '' +
-    '<div>' +
-      '[hello text="Hello world"]' +
-    '</div>';
-    var $contents = $(contents)
+    loadFixtures('overview.html');
 
-    var sc = new Shortcode($contents, {
-      hello: function(options) {
-        return options.text;
+    var sc = new Shortcode($('#overview'), {
+      overview: function(options) {
+        return options.target;
       }
     });
 
-    expect(sc.matches.hello.options).toEqual({
-      text: 'Hello world'
+    expect(sc.matches.overview.options).toEqual({
+      target: 'h2'
     });
   });
 
   it('replaces tag with matching object result', function() {
-    var contents = '' +
-    '<div>' +
-      '[hello text="Hello world"]' +
-    '</div>';
-    var $contents = $(contents);
+    loadFixtures('basic_with_options.html');
+    var $el = $('#basic_with_options');
 
-    var sc = new Shortcode($contents, {
+    var sc = new Shortcode($el, {
       hello: function(options) {
         return options.text;
       }
     });
 
-    expect($contents.html()).toEqual('Hello world');
+    expect($el.html()).toMatch('Hello world');
   });
 
   it('asynchronously replaces tag with matching object result', function(done) {
-    var contents = '' +
-    '<div>' +
-      '[hello text="Hello world"]' +
-    '</div>';
-    var $contents = $(contents);
+    loadFixtures('basic_with_options.html');
+    var $el = $('#basic_with_options');
 
-    var sc = new Shortcode($contents, {
+    var sc = new Shortcode($el, {
       hello: function(options, done) {
         setTimeout(function() {
           done(options.text);
@@ -96,23 +82,18 @@ describe('Shortcode', function() {
     });
 
     setTimeout(function() {
-      expect($contents.html()).toEqual('Hello world');
+      expect($el.html()).toMatch('Hello world');
       done();
     }, 1);
   });
 
   it('supports DOM manipulation before return', function() {
-    var contents = '' +
-    '<div>' +
-      '[overview target="h2"]' +
-      '<h2>One</h2>' +
-      '<h2>Two</h2>' +
-      '<h2>Three</h2>' +
-    '</div>';
-    var $contents = $(contents);
-    var sc = new Shortcode($contents, {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var sc = new Shortcode($el, {
       overview: function(options) {
-        $contents.find(options.target).each(function(index, el) {
+        $el.find(options.target).each(function(index, el) {
           var id = $(el).text().toLowerCase().replace(' ', '-')
           $(this).attr('id', id);
         });
@@ -121,62 +102,53 @@ describe('Shortcode', function() {
       }
     });
 
-    expect($contents.find('h2').first().attr('id')).toEqual('one');
+    expect($el.find('h2').first().attr('id')).toEqual('one');
   });
 
   it('supports jQuery object as replacement', function() {
-    var contents = '' +
-    '<div>' +
-      '[overview target="h2"]' +
-    '</div>';
-    var $contents = $(contents);
-    var html = '<div id="overview">Overview</div>';
-    var sc = new Shortcode($contents, {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var html = '<span>Overview</span>';
+    var sc = new Shortcode($el, {
       overview: function(options) {
         return $(html);
       }
     });
 
-    expect($contents.html()).toEqual(html);
+    expect($el.html()).toMatch(html);
 
   });
 
   it('supports DOM object as replacement', function() {
-    var contents = '' +
-    '<div>' +
-      '[overview target="h2"]' +
-    '</div>';
-    var $contents = $(contents);
-    var html = '<div id="overview">Overview</div>';
-    var sc = new Shortcode($contents, {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var html = '<span>Overview</span>';
+    var sc = new Shortcode($el, {
       overview: function(options) {
-        var el = document.createElement("div");
-        el.id = 'overview';
+        var el = document.createElement('span');
         el.innerHTML = 'Overview';
         return el;
       }
     });
 
-    expect($contents.html()).toEqual(html);
-
+    expect($el.html()).toMatch(html);
   });
 });
 
 describe('jQuery plugin', function() {
   it('initializes with jQuery', function() {
-    var contents = '' +
-      '<div>' +
-        '[hello text="Hello world"]' +
-      '</div>';
-    var $contents = $(contents);
+    loadFixtures('basic_with_options.html');
+    var $el = $('#basic_with_options');
 
-    $contents.shortcode({
+    $el.shortcode({
       hello: function(options) {
         return options.text;
       }
     });
 
-    expect($contents.data('shortcode') instanceof Shortcode).toBe(true);
-    expect($contents.html()).toEqual('Hello world');
+    expect($el.data('shortcode') instanceof Shortcode).toBe(true);
+    expect($el.html()).toMatch('Hello world');
   });
 });

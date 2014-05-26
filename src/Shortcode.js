@@ -1,7 +1,7 @@
 /* jshint strict: false, unused: false */
 
 var Shortcode = function(el, tags) {
-  if (!el && !tags) { return; }
+  if (!el) { return; }
 
   this.el      = el;
   this.tags    = tags;
