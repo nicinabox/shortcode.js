@@ -14,4 +14,4 @@
 
 In lieu of a formal styleguide, take care to maintain the existing style.
 
-Thanks for you help!
+Thanks for your help!
