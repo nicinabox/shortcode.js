@@ -41,6 +41,14 @@ Shortcode.prototype.replaceMatches = function() {
   var self = this, html;
 
   var done = function(result) {
+    if (result.jquery) {
+      result = result[0];
+    }
+
+    if (result.outerHTML !== undefined) {
+      result = result.outerHTML;
+    }
+
     html = self.el.innerHTML;
     self.el.innerHTML = html.replace(self.matches[key].regex, result);
   };

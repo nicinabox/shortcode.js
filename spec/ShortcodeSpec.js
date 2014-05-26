@@ -121,8 +121,43 @@ describe('Shortcode', function() {
       }
     });
 
-    console.log($contents.html());
     expect($contents.find('h2').first().attr('id')).toEqual('one');
+  });
+
+  it('supports jQuery object as replacement', function() {
+    var contents = '' +
+    '<div>' +
+      '[overview target="h2"]' +
+    '</div>';
+    var $contents = $(contents);
+    var html = '<div id="overview">Overview</div>';
+    var sc = new Shortcode($contents, {
+      overview: function(options) {
+        return $(html);
+      }
+    });
+
+    expect($contents.html()).toEqual(html);
+
+  });
+
+  it('supports DOM object as replacement', function() {
+    var contents = '' +
+    '<div>' +
+      '[overview target="h2"]' +
+    '</div>';
+    var $contents = $(contents);
+    var html = '<div id="overview">Overview</div>';
+    var sc = new Shortcode($contents, {
+      overview: function(options) {
+        var el = document.createElement("div");
+        el.id = 'overview';
+        el.innerHTML = 'Overview';
+        return el;
+      }
+    });
+
+    expect($contents.html()).toEqual(html);
 
   });
 });
