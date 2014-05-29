@@ -1,5 +1,4 @@
 $(function() {
-  var $el = $('body');
   var readmePath = window.location.hostname === 'localhost' ?
     '../../README.md' : 'README.md';
   var xhr = $.get(readmePath);
@@ -24,30 +23,6 @@ $(function() {
 
     $('#root').prepend($heading);
     $('.readme').html($contents);
-
-    // The real shortcode example:
-    // Find all h2's and create a table of contents from them
-    new Shortcode($el, {
-      overview: function(options) {
-        var $toc = $($('#toc').html());
-
-        $el.find(options.target).each(function(index, el) {
-          var text = $(el).text();
-          var id = text.toLowerCase().replace(' ', '-');
-
-          $(this).attr('id', id);
-          $toc.find('ul').append(
-            $('<li>').append($('<a>', {
-              text: text,
-              href: '#' + id
-            }))
-          );
-        });
-
-        return $toc;
-      }
-    });
-
   });
 });
 

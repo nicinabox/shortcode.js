@@ -17,6 +17,10 @@ a:hover {
   border-bottom: 1px solid;
 }
 
+small {
+  font-size: 75%;
+}
+
 h1 {
   font-weight: 500;
 }
@@ -51,6 +55,25 @@ pre {
   border-bottom: 1px solid;
 }
 
+.toggle-shortcode {
+  display: inline-block;
+  float: left;
+  text-align: right;
+  margin-left: -280px;
+  margin-right: 30px;
+  width: 250px;
+}
+
+@media screen and (max-width: 1068px) {
+  .toggle-shortcode {
+    width: auto;
+    float: none;
+    margin: 0;
+    text-align: left;
+    display: block;
+  }
+}
+
 .contents {
   background: #fafafa;
   border-left: 4px solid #eee;
@@ -65,6 +88,10 @@ pre {
 
 .error {
   text-align: center;
+}
+
+.text-muted {
+  color: #aaa;
 }
 
 footer {
