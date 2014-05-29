@@ -9,10 +9,10 @@ var toggleShortcode = function($el) {
 
     // The goodies start here
     new Shortcode($el, {
-      overview: function(options) {
+      overview: function() {
         var $toc = $($('#toc').html());
 
-        $el.find(options.target).each(function(index, el) {
+        $el.find(this.options.target).each(function(index, el) {
           var text = $(el).text();
           var id = text.toLowerCase().replace(' ', '-');
 
