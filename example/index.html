@@ -12,12 +12,16 @@
   <script src="../src/Shortcode.js"></script>
 </head>
 <body>
-  <div id="root">
-    <p class="tip">
-      <strong>Tip:</strong> <a href="#" class="view-source">View Source</a> to see how Contents is created with <code>[overview target="h2"]</code>. This page is loaded from <a href="https://github.com/nicinabox/shortcode.js/blob/master/README.md">README.md</a>.
-    </p>
+  <div class="tip">
+    <strong>Tip:</strong> <a href="#" class="view-source">View Source</a> to see how the Overview is created with <code>[overview target="h2"]</code>. This page is loaded from <a href="https://github.com/nicinabox/shortcode.js/blob/master/README.md">README.md</a>.
+  </div>
 
-    <!-- We're going to load README.md here, which includes [overview target="h2"] to be replaced. Check js/main.js for full code. -->
+  <div id="root">
+
+    <!-- This will be replaced with a table of contents (overview) -->
+    [overview target="h2"]
+
+    <!-- We're going to load the readme here -->
     <div class="readme"></div>
 
     <footer>
@@ -29,7 +33,7 @@
 
   <script type="text/x-template" id="toc">
     <div class="contents">
-      <strong>Contents</strong>
+      <strong>Overview</strong>
       <ul>
       </ul>
     </div>

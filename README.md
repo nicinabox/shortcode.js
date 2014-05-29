@@ -1,10 +1,6 @@
 # [shortcode.js](https://github.com/nicinabox/shortcode.js)
 
-Replace Wordpress-style shortcode strings with anything. No dependencies required.
-
-Read more about [Shortcodes in Wordpress.](http://codex.wordpress.org/Shortcode)
-
-[overview target="h2"]
+Replace [Wordpress-style shortcodes](http://codex.wordpress.org/Shortcode) with anything. No dependencies required.
 
 ## Usage
 

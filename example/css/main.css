@@ -39,6 +39,16 @@ pre {
 
 .tip {
   font-size: 80%;
+  padding: 8px; 20px;
+  text-align: center;
+  background: #27ae60;
+  color: #fff;
+  margin-bottom: 40px;
+}
+
+.tip a {
+  color: #fff;
+  border-bottom: 1px solid;
 }
 
 .contents {
