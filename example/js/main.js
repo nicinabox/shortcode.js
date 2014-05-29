@@ -1,6 +1,8 @@
 $(function() {
   var $el = $('body');
-  var xhr = $.get('../../README.md');
+  var readmePath = window.location.hostname === 'localhost' ?
+    '../../README.md' : 'README.md';
+  var xhr = $.get(readmePath);
 
   // We need a server to load the readme
   xhr.fail(function() {
