@@ -1,4 +1,4 @@
-# shortcode.js
+# [shortcode.js](https://github.com/nicinabox/shortcode.js)
 
 Replace Wordpress-style shortcode strings with anything. No dependencies required.
 

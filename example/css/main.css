@@ -17,7 +17,11 @@ a:hover {
   border-bottom: 1px solid;
 }
 
-h1, h2 {
+h1 {
+  font-weight: 500;
+}
+
+h2 {
   font-weight: 300;
   color: #222;
 }

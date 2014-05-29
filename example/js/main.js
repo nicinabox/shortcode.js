@@ -45,5 +45,9 @@ $(function() {
     });
 
   });
+});
 
+$(document).on('click', '.view-source', function(e) {
+  e.preventDefault();
+  window.location = 'view-source:' + window.location.href;
 });
