@@ -1,9 +1,5 @@
 /* jshint strict: false, unused: false */
 
-// TODO: convert each match to node for faster iteration
-// TODO: don't convert nodes inside code or pre
-// TODO: support multiple instances of a tag
-
 var Shortcode = function(el, tags) {
   if (!el) { return; }
 
