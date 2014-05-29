@@ -19,7 +19,11 @@ $(function() {
 
   xhr.done(function(data) {
     // Insert the readme
-    $('.readme').html(marked(data));
+    var $contents = $(marked(data));
+    var $heading = $contents.splice(0, 3);
+
+    $('#root').prepend($heading);
+    $('.readme').html($contents);
 
     // The real shortcode example:
     // Find all h2's and create a table of contents from them
