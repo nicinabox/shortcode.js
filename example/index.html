@@ -3,44 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <title>shortcode.js Example</title>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
+  <link rel="stylesheet" href="css/main.css">
+
   <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://rawgithub.com/chjj/marked/master/marked.min.js"></script>
+  <script src="js/main.js"></script>
   <script src="../src/Shortcode.js"></script>
 </head>
 <body>
-  <h1>shortcode.js</h1>
+  <div id="root">
+    <p class="tip">
+      <strong>Tip:</strong> View the source to see how Contents is created with <code>[overview target="h2"]</code>.
+    </p>
 
-  <p>
-    <strong>Tip:</strong> View the source to see how the contents are dynamically created with <code>[overview target="h2"]</code>.
-  </p>
+    <div class="readme"></div>
 
-  [overview target="h2"]
-
-  <h2>Usage</h2>
-
-  <p>
-    `Shortcode` accepts 2 arguments: an element, and an object of tags to match.
-  </p>
-  <p>
-    Each tag method returns a string to replace the original tag (in the DOM) and accepts 2 arguments: an object of parsed options, and an (optional) asynchronous callback.
-  </p>
-
-  <h2>jQuery</h2>
-
-  <p>
-    While shortcode.js doesn't rely on jQuery, you may find it convenient to use. Shortcode can accept a jQuery object or a DOM object as the first argument.
-  </p>
-
-  <h2>Gotchas</h2>
-
-  <ul>
-    <li>
-      shortcode.js does not support shortcodes with a start and end tag.
-    </li>
-  </ul>
-
-  <h2>License</h2>
-
-  <p>MIT (c) 2014 Nic Aitch</p>
+    <footer>
+      <p>
+        Made with all the love in the world by <a href="http://twitter.com/nicinabox">@nicinabox</a>.
+      </p>
+    </footer>
+  </div>
 
   <script type="text/x-template" id="toc">
     <div class="contents">
@@ -48,30 +32,6 @@
       <ul>
       </ul>
     </div>
-  </script>
-
-  <script>
-    var $el = $('body');
-    new Shortcode($el, {
-      overview: function(options) {
-        var $toc = $($('#toc').html());
-
-        $el.find(options.target).each(function(index, el) {
-          var text = $(el).text();
-          var id = text.toLowerCase().replace(' ', '-');
-
-          $(this).attr('id', id);
-          $toc.find('ul').append(
-            $('<li>').append($('<a>', {
-              text: text,
-              href: '#' + id
-            }))
-          );
-        });
-
-        return $toc;
-      }
-    });
   </script>
 
 </body>

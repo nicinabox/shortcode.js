@@ -14,4 +14,10 @@
 
 In lieu of a formal styleguide, take care to maintain the existing style.
 
-Thanks for your help!
+**Thanks for your help!**
+
+## Dev setup
+
+* Run `npm install`
+* Start a webserver in the current directory: `python -m SimpleHTTPServer`
+* Run tests: `open SpecRunner.html`

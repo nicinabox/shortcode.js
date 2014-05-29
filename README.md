@@ -1,8 +1,10 @@
 # shortcode.js
 
-Replace Wordpress-style shortcode strings with anything. No dependencies.
+Replace Wordpress-style shortcode strings with anything. No dependencies required.
 
 Read more about [Shortcodes in Wordpress.](http://codex.wordpress.org/Shortcode)
+
+[overview target="h2"]
 
 ## Usage
 
@@ -63,6 +65,10 @@ $('body').shortcode({
 ## Gotchas
 
 * shortcode.js does not support shortcodes with a start and end tag.
+
+## Contributing and dev setup
+
+See `CONTRIBUTING.md`
 
 ## License
 

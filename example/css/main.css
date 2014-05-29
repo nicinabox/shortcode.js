@@ -1,0 +1,59 @@
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #555;
+}
+
+a {
+  color: #27ae60;
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+}
+
+h1, h2 {
+  font-weight: 300;
+  color: #222;
+}
+
+pre {
+  border-left: 3px solid #27ae60;
+  padding-left: 30px;
+}
+
+#root {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tip {
+  font-size: 80%;
+}
+
+.contents {
+  background: #fafafa;
+  border-left: 4px solid #eee;
+  padding: 15px 20px;
+}
+
+.contents ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.error {
+  text-align: center;
+}
+
+footer {
+  margin: 60px 0;
+  font-size: 80%;
+}
