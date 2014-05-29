@@ -28,6 +28,10 @@ new Shortcode(document.querySelector('body'), {
 * Ignores tags inside `pre` and `code`
 * Tested with Jasmine
 
+## Supported browsers
+
+Shortcode.js should work in any browser that supports `Function.prototype.bind` (Sorry IE7 & 8). If you need to support <IE9, try the [polyfill published in MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility).
+
 ## Using async
 
 Sometimes you need to do asynchronous work. Don't return anything from the shortcode method. Instead, call `done` with your return value to update the DOM.
