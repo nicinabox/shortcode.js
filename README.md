@@ -1,6 +1,6 @@
 # shortcode.js
 
-Replace Wordpress-style shortcode strings with anything. jQuery not required.
+Replace Wordpress-style shortcode strings with anything. No dependencies.
 
 Read more about [Shortcodes in Wordpress.](http://codex.wordpress.org/Shortcode)
 
@@ -10,21 +10,27 @@ Read more about [Shortcodes in Wordpress.](http://codex.wordpress.org/Shortcode)
 
 Each tag method returns a string to replace the original tag (in the DOM) and accepts 2 arguments: an object of parsed options, and an (optional) asynchronous callback.
 
-### The basics
-
-The shortcode `[hello text="Hello World!"]` will be replaced with `Hello World!`. Be sure to return something at the end!
-
 ```javascript
-var shortcode = new Shortcode(document.querySelector('body'), {
+// Replaces [hello text="Hello world"] in `body` with "Hello world"
+new Shortcode(document.querySelector('body'), {
   hello: function(options) {
     return options.text;
   }
-});
+}
 ```
 
-### Asynchronous
+## Features
 
-Sometimes you need to do asynchronous work. Don't return anything from the shortcode method. Instead, use the `done` callback to update the DOM.
+* Supports multiple tag instances
+* Supports asynchronous callbacks
+* Supports DOM or jQuery selectors
+* Includes jQuery plugin definition
+* Ignores tags inside `pre` and `code`
+* Tested with Jasmine
+
+## Using async
+
+Sometimes you need to do asynchronous work. Don't return anything from the shortcode method. Instead, call `done` with your return value to update the DOM.
 
 ```javascript
 var shortcode = new Shortcode(document.querySelector('body'), {
