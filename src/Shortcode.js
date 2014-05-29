@@ -18,27 +18,22 @@ var Shortcode = function(el, tags) {
 };
 
 Shortcode.prototype.matchTags = function() {
-  var html = this.el.outerHTML;
+  var html = this.el.outerHTML, instances,
+      match, re;
 
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
-    var re = this.template(this.regex, {
-      name: key
-    });
-
-    var instancesRegex = new RegExp(re, 'g');
-    var instances = html.match(instancesRegex) || [];
+    re        = this.template(this.regex, { name: key });
+    instances = html.match(new RegExp(re, 'g')) || [];
 
     for (var i = 0, len = instances.length; i < len; i++) {
-      var optionsRegex = new RegExp(re);
-
-      var match = instances[i].match(optionsRegex);
+      match = instances[i].match(new RegExp(re));
 
       if (match) {
         this.matches.push({
           name: key,
           tag: match[0],
-          options: this.parseTagOptions(match[1])
+          options: this.parseOptions(match[1])
         });
       }
     }
@@ -51,11 +46,9 @@ Shortcode.prototype.convertMatchesToNodes = function() {
       if (p1) {
         return match;
       } else {
-
         var node = document.createElement('span');
         node.setAttribute('data-sc-tag', this.tag);
-        node.setAttribute('data-sc-name', this.name);
-        node.className = 'sc-node-' + this.name;
+        node.className = 'sc-node sc-node-' + this.name;
         return node.outerHTML;
       }
     };
@@ -70,23 +63,20 @@ Shortcode.prototype.convertMatchesToNodes = function() {
 };
 
 Shortcode.prototype.replaceNodes = function() {
-  var self = this, html, match, result, i, len, tag, done, node,
-      nodes = document.querySelectorAll('[data-sc-name]');
+  var self = this, html, match, result, done, node,
+      nodes = document.querySelectorAll('.sc-node');
 
   var replacer = function(result) {
     if (result.jquery) { result = result[0]; }
 
-    if (typeof result === 'string') {
+    if (typeof result !== 'object') {
       result = document.createTextNode(result);
     }
 
-    if (node.dataset.scTag === this.tag) {
-      node.parentNode.replaceChild(result, node);
-    }
+    node.parentNode.replaceChild(result, node);
   };
 
-  console.log(this.matches)
-  for (i = 0, len = this.matches.length; i < len; i++) {
+  for (var i = 0, len = this.matches.length; i < len; i++) {
     match = this.matches[i];
     node  = document.querySelector('.sc-node-' + match.name);
 
@@ -101,7 +91,7 @@ Shortcode.prototype.replaceNodes = function() {
   }
 };
 
-Shortcode.prototype.parseTagOptions = function(stringOptions) {
+Shortcode.prototype.parseOptions = function(stringOptions) {
   var options = {}, set;
   if (!stringOptions) { return; }
 
@@ -116,10 +106,6 @@ Shortcode.prototype.parseTagOptions = function(stringOptions) {
   }
 
   return options;
-};
-
-Shortcode.prototype.escapeTag = function (str) {
-  return str.replace(/"/g, '&quot;');
 };
 
 Shortcode.prototype.escapeRegExp = function (str) {
