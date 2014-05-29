@@ -94,6 +94,10 @@ pre {
   color: #aaa;
 }
 
+.code {
+  font-family: monospace;
+}
+
 footer {
   margin: 60px 0;
   font-size: 80%;

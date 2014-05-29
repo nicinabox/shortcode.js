@@ -2,7 +2,9 @@
 var toggleShortcode = function($el) {
   // This switch is just for the toggle feature
   if (this.enabled) {
-    $('.contents').replaceWith($('.contents').data('tag'));
+    var $contents = $('.contents');
+    $contents.parent().addClass('code');
+    $contents.replaceWith($contents.data('tag'));
     this.enabled = false;
 
   } else {
@@ -15,7 +17,7 @@ var toggleShortcode = function($el) {
 
         $el.find(this.options.target).each(function(index, el) {
           var text = $(el).text();
-          var id = text.toLowerCase().replace(' ', '-');
+          var id = text.toLowerCase().replace(/\s/g, '-');
 
           $(this).attr('id', id);
           $toc.find('ul').append(
@@ -25,6 +27,8 @@ var toggleShortcode = function($el) {
             }))
           );
         });
+
+        $el.find('.code').removeClass('code');
 
         return $toc;
       }
