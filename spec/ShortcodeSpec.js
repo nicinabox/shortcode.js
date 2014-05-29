@@ -44,8 +44,8 @@ describe('Shortcode', function() {
     loadFixtures('overview.html');
 
     var sc = new Shortcode($('#overview'), {
-      overview: function(options) {
-        return options.target;
+      overview: function() {
+        return this.options.target;
       }
     });
 
@@ -54,13 +54,28 @@ describe('Shortcode', function() {
     });
   });
 
+  it('binds match object to this in tag method', function() {
+    loadFixtures('overview.html');
+
+    new Shortcode($('#overview'), {
+      overview: function() {
+        expect(this).toEqual({
+          name: 'overview',
+          tag: '[overview target="h2"]',
+          options: { target : 'h2' }
+        });
+      }
+    });
+
+  });
+
   it('replaces tag with matching object result', function() {
     loadFixtures('basic_with_options.html');
     var $el = $('#basic_with_options');
 
     var sc = new Shortcode($el, {
-      hello: function(options) {
-        return options.text;
+      hello: function() {
+        return this.options.text;
       }
     });
 
@@ -72,8 +87,8 @@ describe('Shortcode', function() {
     var $el = $('#basic_with_pre');
 
     var sc = new Shortcode($el, {
-      hello: function(options) {
-        return options.text;
+      hello: function() {
+        return this.options.text;
       }
     });
 
@@ -92,15 +107,15 @@ describe('Shortcode', function() {
     var $el = $('#multiple');
 
     var sc = new Shortcode($el, {
-      hello: function(options) {
-        if (options) {
-          return options.text;
+      hello: function() {
+        if (this.options) {
+          return this.options.text;
         } else {
           return '';
         }
       },
-      overview: function(options) {
-        return options.title;
+      overview: function() {
+        return this.options.title;
       }
     });
 
@@ -118,9 +133,10 @@ describe('Shortcode', function() {
     var $el = $('#basic_with_options');
 
     var sc = new Shortcode($el, {
-      hello: function(options, complete) {
+      hello: function(complete) {
+        var self = this;
         setTimeout(function() {
-          complete(options.text);
+          complete(self.options.text);
         }, 0);
       }
     });
@@ -136,9 +152,9 @@ describe('Shortcode', function() {
     var $el = $('#overview');
 
     var sc = new Shortcode($el, {
-      overview: function(options) {
-        $el.find(options.target).each(function(index, el) {
-          var id = $(el).text().toLowerCase().replace(' ', '-')
+      overview: function() {
+        $el.find(this.options.target).each(function(index, el) {
+          var id = $(el).text().toLowerCase().replace(' ', '-');
           $(this).attr('id', id);
         });
 
