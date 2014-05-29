@@ -2,7 +2,7 @@
 var toggleShortcode = function($el) {
   // This switch is just for the toggle feature
   if (this.enabled) {
-    $('.contents').replaceWith('[overview target="h2"]');
+    $('.contents').replaceWith($('.contents').data('tag'));
     this.enabled = false;
 
   } else {
@@ -11,6 +11,7 @@ var toggleShortcode = function($el) {
     new Shortcode($el, {
       overview: function() {
         var $toc = $($('#toc').html());
+        $toc.data('tag', this.tag);
 
         $el.find(this.options.target).each(function(index, el) {
           var text = $(el).text();

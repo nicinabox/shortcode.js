@@ -6,13 +6,13 @@ Replace [Wordpress-style shortcodes](http://codex.wordpress.org/Shortcode) with 
 
 `Shortcode` accepts 2 arguments: an element, and an object of tags to match.
 
-Each tag method returns a string to replace the original tag (in the DOM) and accepts 2 arguments: an object of parsed options, and an (optional) asynchronous callback.
+Each tag method returns a string to replace the original tag (in the DOM) and accepts an (optional) asynchronous callback. `this` is bound to the match object.
 
 ```javascript
 // Replaces [hello text="Hello world"] in `body` with "Hello world"
 new Shortcode(document.querySelector('body'), {
-  hello: function(options) {
-    return options.text;
+  hello: function() {
+    return this.options.text;
   }
 }
 ```
@@ -36,9 +36,10 @@ Sometimes you need to do asynchronous work. Don't return anything from the short
 
 ```javascript
 var shortcode = new Shortcode(document.querySelector('body'), {
-  hello: function(options, done) {
+  hello: function(done) {
+    var self = this;
     setTimeout(function() {
-      done(options.text);
+      done(self.options.text);
     }, 1000);
   }
 });
@@ -52,8 +53,8 @@ Alternatively, a jQuery plugin wrapper is supplied.
 
 ```javascript
 $('body').shortcode({
-  hello: function(options) {
-    return options.text;
+  hello: function() {
+    return this.options.text;
   }
 })
 ```
