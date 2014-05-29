@@ -67,7 +67,7 @@ describe('Shortcode', function() {
     expect($el.html()).toMatch('Hello world');
   });
 
-  xit('does not replace instances in code or pre', function() {
+  it('does not replace instances in code or pre', function() {
     loadFixtures('basic_with_pre.html');
     var $el = $('#basic_with_pre');
 
@@ -78,12 +78,12 @@ describe('Shortcode', function() {
     });
 
     var html = '' +
-      '<div id="basic_with_pre">\n'+
-        '<pre>[hello]</pre>\n' +
-        '<code>[hello]</code>\n' +
-        '\n' +
-        'Hello world\n' +
-      '</div>';
+      '\n'+
+      '  <pre>[hello]</pre>\n' +
+      '  <code>[hello text="Hello world"]</code>\n' +
+      '\n' +
+      '  Hello world\n';
+
     expect($el.html()).toEqual(html);
   });
 
@@ -110,7 +110,7 @@ describe('Shortcode', function() {
       '  123\n' +
       '  Contents\n';
 
-    expect($el.html()).toMatch(html);
+    expect($el.html()).toEqual(html);
   });
 
   it('asynchronously replaces tag with matching object result', function(done) {

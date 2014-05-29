@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>shortcode.js Example</title>
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="../src/Shortcode.js"></script>
+</head>
+<body>
+  <h1>shortcode.js</h1>
+
+  <p>
+    <strong>Tip:</strong> View the source to see how the contents are dynamically created with <code>[overview target="h2"]</code>.
+  </p>
+
+  [overview target="h2"]
+
+  <h2>Usage</h2>
+
+  <p>
+    `Shortcode` accepts 2 arguments: an element, and an object of tags to match.
+  </p>
+  <p>
+    Each tag method returns a string to replace the original tag (in the DOM) and accepts 2 arguments: an object of parsed options, and an (optional) asynchronous callback.
+  </p>
+
+  <h2>jQuery</h2>
+
+  <p>
+    While shortcode.js doesn't rely on jQuery, you may find it convenient to use. Shortcode can accept a jQuery object or a DOM object as the first argument.
+  </p>
+
+  <h2>Gotchas</h2>
+
+  <ul>
+    <li>
+      shortcode.js does not support shortcodes with a start and end tag.
+    </li>
+  </ul>
+
+  <h2>License</h2>
+
+  <p>MIT (c) 2014 Nic Aitch</p>
+
+  <script type="text/x-template" id="toc">
+    <div class="contents">
+      <strong>Contents</strong>
+      <ul>
+      </ul>
+    </div>
+  </script>
+
+  <script>
+    var $el = $('body');
+    new Shortcode($el, {
+      overview: function(options) {
+        var $toc = $($('#toc').html());
+
+        $el.find(options.target).each(function(index, el) {
+          var text = $(el).text();
+          var id = text.toLowerCase().replace(' ', '-');
+
+          $(this).attr('id', id);
+          $toc.find('ul').append(
+            $('<li>').append($('<a>', {
+              text: text,
+              href: '#' + id
+            }))
+          );
+        });
+
+        return $toc;
+      }
+    });
+  </script>
+
+</body>
+</html>

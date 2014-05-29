@@ -46,48 +46,57 @@ Shortcode.prototype.matchTags = function() {
 };
 
 Shortcode.prototype.convertMatchesToNodes = function() {
-  var html = this.el.innerHTML, node,
-    replacer = function(match, p1) {
-      if (p1) { return match; }
-      else {    return node.outerHTML; }
+  var html = this.el.innerHTML, self = this,
+    replacer = function(match, p1, p2, p3, p4, offset, string) {
+      if (p1) {
+        return match;
+      } else {
+
+        var node = document.createElement('span');
+        node.setAttribute('data-sc-tag', this.tag);
+        node.setAttribute('data-sc-name', this.name);
+        node.className = 'sc-node-' + this.name;
+        return node.outerHTML;
+      }
     };
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
-    node = document.createElement('span');
-    node.setAttribute('data-regex', this.matches[i].tag);
-    node.className = 'node-' + this.matches[i].name;
-
-    var re = new RegExp('(data-regex=")?' + this.escapeRegExp(this.matches[i].tag), 'g');
-    html = html.replace(re, replacer);
+    var excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
+    var re = new RegExp(excludes + this.escapeRegExp(this.matches[i].tag), 'g');
+    html = html.replace(re, replacer.bind(this.matches[i]));
   }
 
   this.el.innerHTML = html;
 };
 
 Shortcode.prototype.replaceNodes = function() {
-  var self = this, html, match, result, i, len, tag, done;
+  var self = this, html, match, result, i, len, tag, done, node,
+      nodes = document.querySelectorAll('[data-sc-name]');
 
   var replacer = function(result) {
-    var node = document.querySelector('.node-' + this.name);
-
     if (result.jquery) { result = result[0]; }
 
     if (typeof result === 'string') {
       result = document.createTextNode(result);
     }
 
-    if (node.dataset.regex === this.tag) {
+    if (node.dataset.scTag === this.tag) {
       node.parentNode.replaceChild(result, node);
     }
   };
 
+  console.log(this.matches)
   for (i = 0, len = this.matches.length; i < len; i++) {
-    match  = this.matches[i];
-    done   = replacer.bind(match);
-    result = this.tags[match.name](match.options, done);
+    match = this.matches[i];
+    node  = document.querySelector('.sc-node-' + match.name);
 
-    if (result !== undefined) {
-      done(result);
+    if (node && node.dataset.scTag === match.tag) {
+      done   = replacer.bind(match);
+      result = this.tags[match.name](match.options, done);
+
+      if (result !== undefined) {
+        done(result);
+      }
     }
   }
 };
