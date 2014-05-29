@@ -38,7 +38,7 @@ var toggleShortcode = function($el) {
   }
 };
 
-$(document).on('click', '.toggle-shortcode', function(e) {
+$(document).on('click', '.toggle-shortcode, .code', function(e) {
   e.preventDefault();
   toggleShortcode($('#root'));
 });
