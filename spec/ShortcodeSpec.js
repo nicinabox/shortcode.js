@@ -33,13 +33,11 @@ describe('Shortcode', function() {
       }
     });
 
-    expect(sc.matches).toEqual({
-      hello: {
-        tag: 'hello',
-        options: undefined,
-        regex: '[hello]'
-      }
-    });
+    expect(sc.matches).toEqual([{
+      tag: 'hello',
+      regex: '[hello]',
+      options: undefined
+    }]);
   });
 
   it('converts tag options to object', function() {
@@ -51,7 +49,7 @@ describe('Shortcode', function() {
       }
     });
 
-    expect(sc.matches.overview.options).toEqual({
+    expect(sc.matches[0].options).toEqual({
       target: 'h2'
     });
   });
@@ -69,20 +67,66 @@ describe('Shortcode', function() {
     expect($el.html()).toMatch('Hello world');
   });
 
+  xit('does not replace instances in code or pre', function() {
+    loadFixtures('basic_with_pre.html');
+    var $el = $('#basic_with_pre');
+
+    var sc = new Shortcode($el, {
+      hello: function(options) {
+        return options.text;
+      }
+    });
+
+    var html = '' +
+      '<div id="basic_with_pre">\n'+
+        '<pre>[hello]</pre>\n' +
+        '<code>[hello]</code>\n' +
+        '\n' +
+        'Hello world\n' +
+      '</div>';
+    expect($el.html()).toEqual(html);
+  });
+
+  it('supports multiple instances', function() {
+    loadFixtures('multiple.html');
+    var $el = $('#multiple');
+
+    var sc = new Shortcode($el, {
+      hello: function(options) {
+        if (options) {
+          return options.text;
+        } else {
+          return '';
+        }
+      },
+      overview: function(options) {
+        return options.title;
+      }
+    });
+
+    var html = '\n' +
+      '  \n' +
+      '  \n' +
+      '  123\n' +
+      '  Contents\n';
+
+    expect($el.html()).toMatch(html);
+  });
+
   it('asynchronously replaces tag with matching object result', function(done) {
     loadFixtures('basic_with_options.html');
     var $el = $('#basic_with_options');
 
     var sc = new Shortcode($el, {
-      hello: function(options, done) {
+      hello: function(options, complete) {
         setTimeout(function() {
-          done(options.text);
+          complete(options.text);
         }, 0);
       }
     });
 
     setTimeout(function() {
-      expect($el.html()).toMatch('Hello world');
+      expect($.trim($el.html())).toEqual('Hello world');
       done();
     }, 1);
   });

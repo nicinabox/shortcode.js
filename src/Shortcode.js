@@ -1,11 +1,15 @@
 /* jshint strict: false, unused: false */
 
+// TODO: convert each match to node for faster iteration
+// TODO: don't convert nodes inside code or pre
+// TODO: support multiple instances of a tag
+
 var Shortcode = function(el, tags) {
   if (!el) { return; }
 
   this.el      = el;
   this.tags    = tags;
-  this.matches = {};
+  this.matches = [];
   this.regex   = '\\[{tag}(.*?)?\\]';
 
   if (this.el.jquery) {
@@ -13,7 +17,8 @@ var Shortcode = function(el, tags) {
   }
 
   this.matchTags();
-  this.replaceMatches();
+  this.convertMatchesToNodes();
+  this.replaceNodes();
 };
 
 Shortcode.prototype.matchTags = function() {
@@ -21,44 +26,71 @@ Shortcode.prototype.matchTags = function() {
 
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
-
-    var regex = new RegExp(this.template(this.regex, {
+    var re = this.template(this.regex, {
       tag: key
-    }));
+    });
 
-    var match = html.match(regex);
-    if (match) {
-      this.matches[key] = {
-        tag: key,
-        options: this.parseTagOptions(match[1]),
-        regex: match[0]
-      };
+    var instancesRegex = new RegExp(re, 'g');
+    var instances = html.match(instancesRegex) || [];
+
+    for (var i = 0, len = instances.length; i < len; i++) {
+      var optionsRegex = new RegExp(re);
+
+      var match = instances[i].match(optionsRegex);
+
+      if (match) {
+        this.matches.push({
+          tag: key,
+          regex: match[0],
+          options: this.parseTagOptions(match[1])
+        });
+      }
     }
   }
 };
 
-Shortcode.prototype.replaceMatches = function() {
-  var self = this, html;
+Shortcode.prototype.convertMatchesToNodes = function() {
+  var html = this.el.innerHTML, node,
+    replacer = function(match, p1) {
+      if (p1) { return match; }
+      else {    return node.outerHTML; }
+    };
 
-  var done = function(result) {
-    if (result.jquery) {
-      result = result[0];
+  for (var i = 0, len = this.matches.length; i < len; i++) {
+    node = document.createElement('span');
+    node.setAttribute('data-regex', this.matches[i].regex);
+    node.className = 'node-' + this.matches[i].tag;
+
+    var re = new RegExp('(data-regex=")?' + this.escapeRegExp(this.matches[i].regex), 'g');
+    html = html.replace(re, replacer);
+  }
+
+  this.el.innerHTML = html;
+};
+
+Shortcode.prototype.replaceNodes = function() {
+  var self = this, html, match, result, i, len, tag, done;
+
+  var replacer = function(result) {
+    var node = document.querySelector('.node-' + this.tag);
+
+    if (result.jquery) { result = result[0]; }
+
+    if (typeof result === 'string') {
+      result = document.createTextNode(result);
     }
 
-    if (result.outerHTML !== undefined) {
-      result = result.outerHTML;
+    if (node.dataset.regex === this.regex) {
+      node.parentNode.replaceChild(result, node);
     }
-
-    html = self.el.innerHTML;
-    self.el.innerHTML = html.replace(self.matches[key].regex, result);
   };
 
-  for (var key in this.matches) {
-    if (!this.matches.hasOwnProperty(key)) { return; }
+  for (i = 0, len = this.matches.length; i < len; i++) {
+    match  = this.matches[i];
+    done   = replacer.bind(match);
+    result = this.tags[match.tag](match.options, done);
 
-    var result = this.tags[key](this.matches[key].options, done);
-
-    if (result) {
+    if (result !== undefined) {
       done(result);
     }
   }
@@ -79,6 +111,14 @@ Shortcode.prototype.parseTagOptions = function(stringOptions) {
   }
 
   return options;
+};
+
+Shortcode.prototype.escapeTag = function (str) {
+  return str.replace(/"/g, '&quot;');
+};
+
+Shortcode.prototype.escapeRegExp = function (str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 };
 
 Shortcode.prototype.template = function (s, d) {
