@@ -6,7 +6,7 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{tag}(.*?)?\\]';
+  this.regex   = '\\[{name}(.*?)?\\]';
 
   if (this.el.jquery) {
     this.el = this.el[0];
@@ -23,7 +23,7 @@ Shortcode.prototype.matchTags = function() {
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
     var re = this.template(this.regex, {
-      tag: key
+      name: key
     });
 
     var instancesRegex = new RegExp(re, 'g');
@@ -36,8 +36,8 @@ Shortcode.prototype.matchTags = function() {
 
       if (match) {
         this.matches.push({
-          tag: key,
-          regex: match[0],
+          name: key,
+          tag: match[0],
           options: this.parseTagOptions(match[1])
         });
       }
@@ -54,10 +54,10 @@ Shortcode.prototype.convertMatchesToNodes = function() {
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
     node = document.createElement('span');
-    node.setAttribute('data-regex', this.matches[i].regex);
-    node.className = 'node-' + this.matches[i].tag;
+    node.setAttribute('data-regex', this.matches[i].tag);
+    node.className = 'node-' + this.matches[i].name;
 
-    var re = new RegExp('(data-regex=")?' + this.escapeRegExp(this.matches[i].regex), 'g');
+    var re = new RegExp('(data-regex=")?' + this.escapeRegExp(this.matches[i].tag), 'g');
     html = html.replace(re, replacer);
   }
 
@@ -68,7 +68,7 @@ Shortcode.prototype.replaceNodes = function() {
   var self = this, html, match, result, i, len, tag, done;
 
   var replacer = function(result) {
-    var node = document.querySelector('.node-' + this.tag);
+    var node = document.querySelector('.node-' + this.name);
 
     if (result.jquery) { result = result[0]; }
 
@@ -76,7 +76,7 @@ Shortcode.prototype.replaceNodes = function() {
       result = document.createTextNode(result);
     }
 
-    if (node.dataset.regex === this.regex) {
+    if (node.dataset.regex === this.tag) {
       node.parentNode.replaceChild(result, node);
     }
   };
@@ -84,7 +84,7 @@ Shortcode.prototype.replaceNodes = function() {
   for (i = 0, len = this.matches.length; i < len; i++) {
     match  = this.matches[i];
     done   = replacer.bind(match);
-    result = this.tags[match.tag](match.options, done);
+    result = this.tags[match.name](match.options, done);
 
     if (result !== undefined) {
       done(result);

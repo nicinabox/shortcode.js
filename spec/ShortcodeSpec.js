@@ -34,8 +34,8 @@ describe('Shortcode', function() {
     });
 
     expect(sc.matches).toEqual([{
-      tag: 'hello',
-      regex: '[hello]',
+      name: 'hello',
+      tag: '[hello]',
       options: undefined
     }]);
   });
