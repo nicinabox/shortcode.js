@@ -9,7 +9,7 @@ Replace [Wordpress-style shortcodes](http://codex.wordpress.org/Shortcode) with 
 Each tag method returns a string to replace the original tag (in the DOM) and accepts an (optional) asynchronous callback. `this` is bound to the match object.
 
 ```javascript
-// Replaces [hello text="Hello world"] in `body` with "Hello world"
+/* Replaces [hello text="Hello world"] in `body` with "Hello world" */
 new Shortcode(document.querySelector('body'), {
   hello: function() {
     return this.options.text;
@@ -71,6 +71,10 @@ $('body').shortcode({
   }
 });
 ```
+
+## Releases
+
+See [Releases](https://github.com/nicinabox/shortcode.js/releases) for current version and release notes.
 
 ## Contributing and dev setup
 
