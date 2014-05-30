@@ -168,6 +168,34 @@ describe('Shortcode', function() {
     }, 1);
   });
 
+  it('handles returned DOM element', function() {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var sc = new Shortcode($el, {
+      overview: function() {
+        var overviewEl = document.createElement('div');
+        overviewEl.id = 'overview';
+        return overviewEl;
+      }
+    });
+
+    expect($el[0].outerHTML).toMatch('<div id="overview"></div>');
+  });
+
+  it('handles returned jQuery element', function() {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var sc = new Shortcode($el, {
+      overview: function() {
+        return $('<div>', { id: 'overview' });
+      }
+    });
+
+    expect($el[0].outerHTML).toMatch('<div id="overview"></div>');
+  });
+
   it('supports DOM manipulation before return', function() {
     loadFixtures('overview.html');
     var $el = $('#overview');
