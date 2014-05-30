@@ -3,6 +3,12 @@ $(function() {
     '../../README.md' : 'README.md';
   var xhr = $.get(readmePath);
 
+  marked.setOptions({
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+  });
+
   // We need a server to load the readme
   xhr.fail(function() {
     if (window.location.origin === 'file://') {
