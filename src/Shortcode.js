@@ -78,7 +78,7 @@ Shortcode.prototype.replaceNodes = function() {
         result = document.createTextNode(result);
         break;
       case 'object':
-        if (!result.outerHTML) {
+        if (!result.nodeType) {
           result = JSON.stringify(result);
           result = document.createTextNode(result);
         }
