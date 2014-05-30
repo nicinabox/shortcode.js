@@ -50,6 +50,11 @@ pre {
   margin-bottom: 40px;
 }
 
+.tip code {
+  background: #24a058;
+  border-bottom: none;
+}
+
 .tip a {
   color: #fff;
   border-bottom: 1px solid;
@@ -96,6 +101,19 @@ pre {
 
 .code {
   font-family: monospace;
+}
+
+code {
+  background: #f7f7f7;
+  padding: 3px 5px;
+  border-radius: 3px;
+  border-bottom: 1px solid #eee;
+}
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: none;
 }
 
 footer {
