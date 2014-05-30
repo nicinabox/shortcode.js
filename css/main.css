@@ -35,6 +35,7 @@ code {
   padding: 3px 5px;
   border-radius: 3px;
   border-bottom: 1px solid #eee;
+  font-family: Monaco, monospace;
 }
 
 pre {
@@ -117,7 +118,7 @@ pre code {
 }
 
 .code {
-  font-family: monospace;
+  font-family: Monaco, monospace;
 }
 
 footer {
