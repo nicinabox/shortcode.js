@@ -70,37 +70,7 @@ Shortcode.prototype.replaceNodes = function() {
   var replacer = function(result) {
     if (result.jquery) { result = result[0]; }
 
-    switch(typeof result) {
-      case 'function':
-        result = document.createTextNode(result());
-        break;
-      case 'string':
-        var container = document.createElement('div');
-        var frag = document.createDocumentFragment();
-        container.innerHTML = result;
-        var children = container.children;
-
-        if (children.length) {
-          for (var i = 0, len = children.length; i < len; i++) {
-            frag.appendChild(children[i].cloneNode(true));
-          }
-
-          result = frag;
-        } else {
-          result = document.createTextNode(result);
-        }
-
-        break;
-      case 'object':
-        if (!result.nodeType) {
-          result = JSON.stringify(result);
-          result = document.createTextNode(result);
-        }
-        break;
-      case 'default':
-        break;
-    }
-
+    result = self.parseCallbackResult(result);
     node.parentNode.replaceChild(result, node);
   };
 
@@ -118,6 +88,44 @@ Shortcode.prototype.replaceNodes = function() {
       }
     }
   }
+};
+
+Shortcode.prototype.parseCallbackResult = function(result) {
+  var container, fragment, children;
+
+  switch(typeof result) {
+    case 'function':
+      result = document.createTextNode(result());
+      break;
+
+    case 'string':
+      container = document.createElement('div');
+      fragment = document.createDocumentFragment();
+      container.innerHTML = result;
+      children = container.children;
+
+      if (children.length) {
+        for (var i = 0, len = children.length; i < len; i++) {
+          fragment.appendChild(children[i].cloneNode(true));
+        }
+        result = fragment;
+      } else {
+        result = document.createTextNode(result);
+      }
+      break;
+
+    case 'object':
+      if (!result.nodeType) {
+        result = JSON.stringify(result);
+        result = document.createTextNode(result);
+      }
+      break;
+
+    case 'default':
+      break;
+  }
+
+  return result;
 };
 
 Shortcode.prototype.parseOptions = function(stringOptions) {
