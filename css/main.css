@@ -30,10 +30,27 @@ h2 {
   color: #222;
 }
 
+code {
+  background: #f7f7f7;
+  padding: 3px 5px;
+  border-radius: 3px;
+  border-bottom: 1px solid #eee;
+}
+
 pre {
   border-left: 3px solid #27ae60;
-  padding-left: 30px;
+  background: #fafafa;
+  margin: 0 -150px;
+  padding: 20px 30px;
 }
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: none;
+}
+
 
 #root {
   max-width: 600px;
@@ -101,19 +118,6 @@ pre {
 
 .code {
   font-family: monospace;
-}
-
-code {
-  background: #f7f7f7;
-  padding: 3px 5px;
-  border-radius: 3px;
-  border-bottom: 1px solid #eee;
-}
-pre code {
-  background: none;
-  padding: 0;
-  border-radius: 0;
-  border-bottom: none;
 }
 
 footer {
