@@ -14,7 +14,7 @@ new Shortcode(document.querySelector('body'), {
   hello: function() {
     return this.options.text;
   }
-}
+});
 ```
 
 ## Features
@@ -69,7 +69,7 @@ $('body').shortcode({
   hello: function() {
     return this.options.text;
   }
-})
+});
 ```
 
 ## Contributing and dev setup
