@@ -180,13 +180,13 @@ describe('Shortcode', function() {
       hello: function(complete) {
         var self = this;
         setTimeout(function() {
-          complete('<button>Clicky</button>');
+          complete('<button>Clicky</button><div>test</div>');
         }, 0);
       }
     });
 
     setTimeout(function() {
-      expect($el.html().trim()).toEqual('<button>Clicky</button>');
+      expect($el.html().trim()).toEqual('<button>Clicky</button><div>test</div>');
       done();
     }, 1);
   });

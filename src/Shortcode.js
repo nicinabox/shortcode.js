@@ -76,18 +76,20 @@ Shortcode.prototype.replaceNodes = function() {
         break;
       case 'string':
         var container = document.createElement('div');
+        var frag = document.createDocumentFragment();
         container.innerHTML = result;
+        var children = container.children;
 
-        if (container.children.length) {
-          var frag = document.createDocumentFragment();
-          for (var i = 0, len = container.children.length; i < len; i++) {
-            frag.appendChild(container.children[i]);
+        if (children.length) {
+          for (var i = 0, len = children.length; i < len; i++) {
+            frag.appendChild(children[i].cloneNode(true));
           }
 
           result = frag;
         } else {
           result = document.createTextNode(result);
         }
+
         break;
       case 'object':
         if (!result.nodeType) {
