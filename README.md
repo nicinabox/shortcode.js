@@ -22,6 +22,7 @@ new Shortcode(document.querySelector('body'), {
 * Supports multiple tag instances
 * Supports asynchronous callbacks
 * Supports DOM or jQuery selectors
+* Supports start and end tags
 * Includes jQuery plugin definition
 * Ignores tags inside `pre` and `code`
 * Tested with Jasmine
@@ -35,12 +36,24 @@ Shortcode.js should work in any browser that supports `Function.prototype.bind` 
 Sometimes you need to do asynchronous work. Don't return anything from the shortcode method. Instead, call `done` with your return value to update the DOM.
 
 ```javascript
-var shortcode = new Shortcode(document.querySelector('body'), {
+new Shortcode(document.querySelector('body'), {
   hello: function(done) {
     var self = this;
     setTimeout(function() {
       done(self.options.text);
     }, 1000);
+  }
+});
+```
+
+## Start and end tags
+
+Shortcode.js supports tags like `[note]This is a note[/note]`. The content between tags will be availble in your callback under `this.contents`.
+
+```javascript
+new Shortcode(document.querySelector('body'), {
+  note: function(done) {
+    return this.contents;
   }
 });
 ```
@@ -58,10 +71,6 @@ $('body').shortcode({
   }
 })
 ```
-
-## Gotchas
-
-* shortcode.js does not support shortcodes with a start and end tag.
 
 ## Contributing and dev setup
 

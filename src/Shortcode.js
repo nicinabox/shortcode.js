@@ -6,7 +6,7 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{name}(.*?)?\\]';
+  this.regex   = '\\[{name}(.*?)?\\](?:(.*)\\[\/{name}\\])?';
 
   if (this.el.jquery) {
     this.el = this.el[0];
@@ -32,8 +32,9 @@ Shortcode.prototype.matchTags = function() {
       if (match) {
         this.matches.push({
           name: key,
-          tag: match[0],
-          options: this.parseOptions(match[1])
+          tag: match[0].replace(match[2], '.*'),
+          options: this.parseOptions(match[1]),
+          contents: match[2]
         });
       }
     }
@@ -103,14 +104,14 @@ Shortcode.prototype.parseOptions = function(stringOptions) {
 
   for (var i = 0; i < set.length; i++) {
     var kv = set[i].split('=');
-    options[kv[0]] = kv[1].replace(/\'|\"/g, '');
+    options[kv[0]] = kv[1].replace(/\'|\"/g, '').trim();
   }
 
   return options;
 };
 
 Shortcode.prototype.escapeRegExp = function (str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  return str.replace(/[\-\[\]\/\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 };
 
 Shortcode.prototype.template = function (s, d) {
@@ -118,6 +119,11 @@ Shortcode.prototype.template = function (s, d) {
     s = s.replace(new RegExp('{' + p + '}','g'), d[p]);
   }
   return s;
+};
+
+// Polyfill .trim()
+String.prototype.trim = String.prototype.trim || function () {
+  return this.replace(/^\s+|\s+$/g, '');
 };
 
 // jQuery plugin wrapper

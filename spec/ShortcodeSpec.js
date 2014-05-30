@@ -36,7 +36,8 @@ describe('Shortcode', function() {
     expect(sc.matches).toEqual([{
       name: 'hello',
       tag: '[hello]',
-      options: undefined
+      options: undefined,
+      contents: undefined
     }]);
   });
 
@@ -62,11 +63,11 @@ describe('Shortcode', function() {
         expect(this).toEqual({
           name: 'overview',
           tag: '[overview target="h2"]',
-          options: { target : 'h2' }
+          options: { target : 'h2' },
+          contents: undefined
         });
       }
     });
-
   });
 
   it('replaces tag with matching object result', function() {
@@ -126,6 +127,26 @@ describe('Shortcode', function() {
       '  Contents\n';
 
     expect($el.html()).toEqual(html);
+  });
+
+  it('supports start and end tags', function() {
+    loadFixtures('start_and_end_tags.html');
+    var $el = $('#start_and_end_tags');
+
+    var sc = new Shortcode($el, {
+      note: function() {
+        expect(this).toEqual({
+          name: 'note',
+          tag: '[note text_color="" background_color="" border_color=""].*[/note]',
+          contents: 'This is a note.',
+          options: {
+            'text_color': '',
+            'background_color': '',
+            'border_color': ''
+          }
+        });
+      }
+    });
   });
 
   it('asynchronously replaces tag with matching object result', function(done) {
