@@ -19,7 +19,7 @@ var Shortcode = function(el, tags) {
 
 Shortcode.prototype.matchTags = function() {
   var html = this.el.outerHTML, instances,
-      match, re;
+      match, re, contents;
 
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
@@ -28,13 +28,16 @@ Shortcode.prototype.matchTags = function() {
 
     for (var i = 0, len = instances.length; i < len; i++) {
       match = instances[i].match(new RegExp(re));
+      if (match[2]) {
+        contents = match[2].trim();
+      }
 
       if (match) {
         this.matches.push({
           name: key,
           tag: match[0].replace(match[2], '.*'),
           options: this.parseOptions(match[1]),
-          contents: match[2].trim()
+          contents: contents
         });
       }
     }
