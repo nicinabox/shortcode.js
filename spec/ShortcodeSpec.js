@@ -200,6 +200,34 @@ describe('Shortcode', function() {
     expect($el[0].outerHTML).toMatch('<div id="overview"></div>');
   });
 
+  it('handles returned function', function() {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var sc = new Shortcode($el, {
+      overview: function() {
+        return function() {
+          return 'Contents';
+        };
+      }
+    });
+
+    expect($el[0].outerHTML).toMatch('Contents');
+  });
+
+  it('handles returned object', function() {
+    loadFixtures('overview.html');
+    var $el = $('#overview');
+
+    var sc = new Shortcode($el, {
+      overview: function() {
+        return ['Contents'];
+      }
+    });
+
+    expect($el[0].outerHTML).toMatch('[Contents]');
+  });
+
   it('supports DOM manipulation before return', function() {
     loadFixtures('overview.html');
     var $el = $('#overview');

@@ -64,14 +64,27 @@ Shortcode.prototype.convertMatchesToNodes = function() {
 };
 
 Shortcode.prototype.replaceNodes = function() {
-  var self = this, html, match, result, done, node, fn
+  var self = this, html, match, result, done, node, fn,
       nodes = document.querySelectorAll('.sc-node');
 
   var replacer = function(result) {
     if (result.jquery) { result = result[0]; }
 
-    if (typeof result !== 'object') {
-      result = document.createTextNode(result);
+    switch(typeof result) {
+      case 'function':
+        result = document.createTextNode(result());
+        break;
+      case 'string':
+        result = document.createTextNode(result);
+        break;
+      case 'object':
+        if (!result.outerHTML) {
+          result = JSON.stringify(result);
+          result = document.createTextNode(result);
+        }
+        break;
+      case 'default':
+        break;
     }
 
     node.parentNode.replaceChild(result, node);
