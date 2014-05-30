@@ -86,15 +86,10 @@ pre code {
   margin-right: 30px;
   width: 250px;
 }
-
-@media screen and (max-width: 1068px) {
-  .toggle-shortcode {
-    width: auto;
-    float: none;
-    margin: 0;
-    text-align: left;
-    display: block;
-  }
+.toggle-shortcode a:after {
+  content: "\2192";
+  padding-left: 8px;
+  border-bottom: 1px solid white;
 }
 
 .contents {
@@ -119,9 +114,32 @@ pre code {
 
 .code {
   font-family: Monaco, monospace;
+  cursor: pointer;
 }
 
 footer {
   margin: 60px 0;
   font-size: 80%;
+}
+
+@media screen and (max-width: 1068px) {
+  .toggle-shortcode {
+    width: auto;
+    float: none;
+    margin: 0;
+    text-align: left;
+    display: block;
+  }
+  .toggle-shortcode a:after {
+    content: "\2193";
+  }
+}
+
+@media screen and (max-width: 900px) {
+  body {
+    font-size: 17px;
+  }
+  pre {
+    margin: 0;
+  }
 }
