@@ -172,6 +172,25 @@ describe('Shortcode', function() {
     }, 1);
   });
 
+  it('async returns string of html', function(done) {
+    loadFixtures('basic_with_options.html');
+    var $el = $('#basic_with_options');
+
+    var sc = new Shortcode($el, {
+      hello: function(complete) {
+        var self = this;
+        setTimeout(function() {
+          complete('<button>Clicky</button>');
+        }, 0);
+      }
+    });
+
+    setTimeout(function() {
+      expect($el.html().trim()).toEqual('<button>Clicky</button>');
+      done();
+    }, 1);
+  });
+
   it('handles returned DOM element', function() {
     loadFixtures('overview.html');
     var $el = $('#overview');

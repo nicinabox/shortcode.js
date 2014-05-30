@@ -75,7 +75,19 @@ Shortcode.prototype.replaceNodes = function() {
         result = document.createTextNode(result());
         break;
       case 'string':
-        result = document.createTextNode(result);
+        var container = document.createElement('div');
+        container.innerHTML = result;
+
+        if (container.children.length) {
+          var frag = document.createDocumentFragment();
+          for (var i = 0, len = container.children.length; i < len; i++) {
+            frag.appendChild(container.children[i]);
+          }
+
+          result = frag;
+        } else {
+          result = document.createTextNode(result);
+        }
         break;
       case 'object':
         if (!result.nodeType) {
