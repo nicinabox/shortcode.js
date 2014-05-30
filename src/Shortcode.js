@@ -6,7 +6,7 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{name}(.*?)?\\](?:(.*)\\[\/{name}\\])?';
+  this.regex   = '\\[{name}(.*?)?\\](?:([\\s\\S]*)\\[\/{name}\\])?';
 
   if (this.el.jquery) {
     this.el = this.el[0];
