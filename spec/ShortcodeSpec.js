@@ -8,14 +8,18 @@ describe('Shortcode', function() {
   });
 
   it('accepts an element whose contents will be replaced', function() {
-    var body = document.querySelector('body');
-    var sc = new Shortcode(body);
-    expect(sc.el).toEqual(body);
+    loadFixtures('basic.html');
+
+    var basic = document.querySelector('#basic');
+    var sc = new Shortcode(basic);
+    expect(sc.el).toEqual(basic);
   });
 
   it('accepts an object of tags', function() {
-    var body = document.querySelector('body');
-    var sc = new Shortcode(body, {
+    loadFixtures('basic.html');
+
+    var basic = document.querySelector('#basic');
+    var sc = new Shortcode(basic, {
       hello: function() {
         return ['Hello', 'world'].join(' ');
       }
