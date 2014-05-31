@@ -1,5 +1,8 @@
 /* jshint strict: false, unused: false */
-/* global Shortcode, describe, it, expect, beforeEach, afterEach, loadFixtures */
+/* global Shortcode, jasmine, describe, it,
+   expect, beforeEach, afterEach, loadFixtures */
+
+jasmine.getFixtures().fixturesPath = 'javascripts/fixtures';
 
 describe('Shortcode', function() {
   it('is a function', function() {
