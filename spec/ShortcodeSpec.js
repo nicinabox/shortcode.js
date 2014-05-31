@@ -161,7 +161,6 @@ describe('Shortcode', function() {
         });
       },
       lightbox: function() {
-        console.log(this)
         expect(this).toEqual({
           name: 'lightbox',
           tag: '[lightbox title="test" link_type="button" button_text="" button_color="#1eb492" text_color="#ffffff"][/lightbox]',
