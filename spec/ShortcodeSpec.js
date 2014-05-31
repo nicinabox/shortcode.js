@@ -40,6 +40,7 @@ describe('Shortcode', function() {
     expect(sc.matches).toEqual([{
       name: 'hello',
       tag: '[hello]',
+      regex: '\\[hello\\]',
       options: undefined,
       contents: undefined
     }]);
@@ -64,7 +65,7 @@ describe('Shortcode', function() {
 
     new Shortcode($('#overview'), {
       overview: function() {
-        expect(this).toEqual({
+        expect(this).toMatch({
           name: 'overview',
           tag: '[overview target="h2"]',
           options: { target : 'h2' },
@@ -121,6 +122,9 @@ describe('Shortcode', function() {
       },
       overview: function() {
         return this.options.title;
+      },
+      tag: function() {
+        return this.contents;
       }
     });
 
@@ -128,7 +132,9 @@ describe('Shortcode', function() {
       '  \n' +
       '  \n' +
       '  123\n' +
-      '  Contents\n';
+      '  Contents\n' +
+      '\n' +
+      '  Test\n';
 
     expect($el.html()).toEqual(html);
   });
@@ -142,6 +148,7 @@ describe('Shortcode', function() {
         expect(this).toEqual({
           name: 'note',
           tag: '[note text_color="" background_color="" border_color=""].*[/note]',
+          regex: '\\[note text_color="" background_color="" border_color=""\\]([\\s\\S]*?)\\[\\/note\\]',
           contents: 'This is a note.',
           options: {
             'text_color': '',

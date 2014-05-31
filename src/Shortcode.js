@@ -36,6 +36,7 @@ Shortcode.prototype.matchTags = function() {
         this.matches.push({
           name: key,
           tag: match[0].replace(match[2], '.*'),
+          regex: this.escapeRegExp(match[0]).replace(match[2], '([\\s\\S]*?)'),
           options: this.parseOptions(match[1]),
           contents: contents
         });
@@ -59,7 +60,7 @@ Shortcode.prototype.convertMatchesToNodes = function() {
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
     var excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
-    var re = new RegExp(excludes + this.escapeRegExp(this.matches[i].tag), 'g');
+    var re = new RegExp(excludes + this.matches[i].regex, 'g');
     html = html.replace(re, replacer.bind(this.matches[i]));
   }
 
