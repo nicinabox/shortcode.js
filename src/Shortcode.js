@@ -1,3 +1,10 @@
+/*
+ * shortcode.js 1.1.0
+ * by @nicinabox
+ * License: MIT
+ * Issues: https://github.com/nicinabox/shortcode.js/issues
+ */
+
 /* jshint strict: false, unused: false */
 
 var Shortcode = function(el, tags) {
