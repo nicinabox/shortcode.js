@@ -13,7 +13,7 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{name}(.*?)?\\](?:([\\s\\S]*?)\\[\/{name}\\])?';
+  this.regex   = '\\[{name}(.*?)?\\](?:([\\s\\S]*?)(\\[\/{name}\\]))?';
 
   if (this.el.jquery) {
     this.el = this.el[0];
@@ -26,7 +26,7 @@ var Shortcode = function(el, tags) {
 
 Shortcode.prototype.matchTags = function() {
   var html = this.el.outerHTML, instances,
-      match, re, contents;
+      match, re, contents, regex, tag;
 
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
@@ -35,15 +35,21 @@ Shortcode.prototype.matchTags = function() {
 
     for (var i = 0, len = instances.length; i < len; i++) {
       match = instances[i].match(new RegExp(re));
+      contents = match[3] ? '' : undefined;
+      tag      = match[0];
+      regex    = this.escapeRegExp(tag);
+
       if (match[2]) {
         contents = match[2].trim();
+        tag      = tag.replace(contents, '.*');
+        regex    = regex.replace(contents, '([\\s\\S]*?)');
       }
 
       if (match) {
         this.matches.push({
           name: key,
-          tag: match[0].replace(match[2], '.*'),
-          regex: this.escapeRegExp(match[0]).replace(match[2], '([\\s\\S]*?)'),
+          tag: tag,
+          regex: regex,
           options: this.parseOptions(match[1]),
           contents: contents
         });

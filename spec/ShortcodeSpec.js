@@ -159,6 +159,22 @@ describe('Shortcode', function() {
             'border_color': ''
           }
         });
+      },
+      lightbox: function() {
+        console.log(this)
+        expect(this).toEqual({
+          name: 'lightbox',
+          tag: '[lightbox title="test" link_type="button" button_text="" button_color="#1eb492" text_color="#ffffff"][/lightbox]',
+          regex: '\\[lightbox title="test" link_type="button" button_text="" button_color="#1eb492" text_color="#ffffff"\\]\\[\\/lightbox\\]',
+          contents: '',
+          options: {
+            'button_color': '#1eb492',
+            'button_text': '',
+            'link_type': 'button',
+            'text_color': '#ffffff',
+            'title': 'test'
+          }
+        });
       }
     });
   });
