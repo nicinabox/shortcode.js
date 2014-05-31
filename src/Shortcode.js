@@ -46,32 +46,33 @@ Shortcode.prototype.matchTags = function() {
 };
 
 Shortcode.prototype.convertMatchesToNodes = function() {
-  var html = this.el.innerHTML, self = this,
-    replacer = function(match, p1, p2, p3, p4, offset, string) {
-      if (p1) {
-        return match;
-      } else {
-        var node = document.createElement('span');
-        node.setAttribute('data-sc-tag', this.tag);
-        node.className = 'sc-node sc-node-' + this.name;
-        return node.outerHTML;
-      }
-    };
+  var html = this.el.innerHTML, excludes, re, replacer;
+
+  replacer = function(match, p1, p2, p3, p4, offset, string) {
+    if (p1) {
+      return match;
+    } else {
+      var node = document.createElement('span');
+      node.setAttribute('data-sc-tag', this.tag);
+      node.className = 'sc-node sc-node-' + this.name;
+      return node.outerHTML;
+    }
+  };
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
-    var excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
-    var re = new RegExp(excludes + this.matches[i].regex, 'g');
-    html = html.replace(re, replacer.bind(this.matches[i]));
+    excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
+    re       = new RegExp(excludes + this.matches[i].regex, 'g');
+    html     = html.replace(re, replacer.bind(this.matches[i]));
   }
 
   this.el.innerHTML = html;
 };
 
 Shortcode.prototype.replaceNodes = function() {
-  var self = this, html, match, result, done, node, fn,
+  var self = this, html, match, result, done, node, fn, replacer,
       nodes = document.querySelectorAll('.sc-node');
 
-  var replacer = function(result) {
+  replacer = function(result) {
     if (result.jquery) { result = result[0]; }
 
     result = self.parseCallbackResult(result);
@@ -104,7 +105,7 @@ Shortcode.prototype.parseCallbackResult = function(result) {
 
     case 'string':
       container = document.createElement('div');
-      fragment = document.createDocumentFragment();
+      fragment  = document.createDocumentFragment();
       container.innerHTML = result;
       children = container.children;
 
