@@ -17,12 +17,15 @@ new Shortcode(document.querySelector('body'), {
 });
 ```
 
+Tip: Because shortcode replaces an element's html, you will lose existing event bindings inside that element. Use delegated bindings where possible and call shortcode at the start of your code.
+
 ## Features
 
 * Supports multiple tag instances
+* Supports single and start-end tags
+* Supports multi-line tags
 * Supports asynchronous callbacks
 * Supports DOM or jQuery selectors
-* Supports start and end tags
 * Includes jQuery plugin definition
 * Ignores tags inside `pre` and `code`
 * Tested with Jasmine
@@ -39,6 +42,8 @@ Sometimes you need to do asynchronous work. Don't return anything from the short
 new Shortcode(document.querySelector('body'), {
   hello: function(done) {
     var self = this;
+
+    /* setTimeout is used here to simulate an async event */
     setTimeout(function() {
       done(self.options.text);
     }, 1000);
@@ -71,6 +76,10 @@ $('body').shortcode({
   }
 });
 ```
+
+## Releases
+
+See [Releases](https://github.com/nicinabox/shortcode.js/releases) for current version and release notes.
 
 ## Contributing and dev setup
 

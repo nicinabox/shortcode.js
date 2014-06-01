@@ -1,3 +1,10 @@
+/*
+ * shortcode.js 1.1.0
+ * by @nicinabox
+ * License: MIT
+ * Issues: https://github.com/nicinabox/shortcode.js/issues
+ */
+
 /* jshint strict: false, unused: false */
 
 var Shortcode = function(el, tags) {
@@ -6,7 +13,7 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{name}(.*?)?\\](?:(.*)\\[\/{name}\\])?';
+  this.regex   = '\\[{name}(.*?)?\\](?:([\\s\\S]*?)(\\[\/{name}\\]))?';
 
   if (this.el.jquery) {
     this.el = this.el[0];
@@ -19,7 +26,7 @@ var Shortcode = function(el, tags) {
 
 Shortcode.prototype.matchTags = function() {
   var html = this.el.outerHTML, instances,
-      match, re;
+      match, re, contents, regex, tag, options;
 
   for (var key in this.tags) {
     if (!this.tags.hasOwnProperty(key)) { return; }
@@ -28,52 +35,59 @@ Shortcode.prototype.matchTags = function() {
 
     for (var i = 0, len = instances.length; i < len; i++) {
       match = instances[i].match(new RegExp(re));
+      contents = match[3] ? '' : undefined;
+      tag      = match[0];
+      regex    = this.escapeTagRegExp(tag);
+      options  = this.parseOptions(match[1]);
 
-      if (match) {
-        this.matches.push({
-          name: key,
-          tag: match[0].replace(match[2], '.*'),
-          options: this.parseOptions(match[1]),
-          contents: match[2]
-        });
+      if (match[2]) {
+        contents = match[2].trim();
+        tag      = tag.replace(contents, '');
+        regex    = regex.replace(contents, '([\\s\\S]*?)');
       }
+
+      this.matches.push({
+        name: key,
+        tag: tag,
+        regex: regex,
+        options: options,
+        contents: contents
+      });
     }
   }
 };
 
 Shortcode.prototype.convertMatchesToNodes = function() {
-  var html = this.el.innerHTML, self = this,
-    replacer = function(match, p1, p2, p3, p4, offset, string) {
-      if (p1) {
-        return match;
-      } else {
-        var node = document.createElement('span');
-        node.setAttribute('data-sc-tag', this.tag);
-        node.className = 'sc-node sc-node-' + this.name;
-        return node.outerHTML;
-      }
-    };
+  var html = this.el.innerHTML, excludes, re, replacer;
+
+  replacer = function(match, p1, p2, p3, p4, offset, string) {
+    if (p1) {
+      return match;
+    } else {
+      var node = document.createElement('span');
+      node.setAttribute('data-sc-tag', this.tag);
+      node.className = 'sc-node sc-node-' + this.name;
+      return node.outerHTML;
+    }
+  };
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
-    var excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
-    var re = new RegExp(excludes + this.escapeRegExp(this.matches[i].tag), 'g');
-    html = html.replace(re, replacer.bind(this.matches[i]));
+    excludes = '((data-sc-tag=")|(<pre.*)|(<code.*))?';
+    re       = new RegExp(excludes + this.matches[i].regex, 'g');
+    html     = html.replace(re, replacer.bind(this.matches[i]));
   }
 
   this.el.innerHTML = html;
 };
 
 Shortcode.prototype.replaceNodes = function() {
-  var self = this, html, match, result, done, node, fn
+  var self = this, html, match, result, done, node, fn, replacer,
       nodes = document.querySelectorAll('.sc-node');
 
-  var replacer = function(result) {
+  replacer = function(result) {
     if (result.jquery) { result = result[0]; }
 
-    if (typeof result !== 'object') {
-      result = document.createTextNode(result);
-    }
-
+    result = self.parseCallbackResult(result);
     node.parentNode.replaceChild(result, node);
   };
 
@@ -93,6 +107,44 @@ Shortcode.prototype.replaceNodes = function() {
   }
 };
 
+Shortcode.prototype.parseCallbackResult = function(result) {
+  var container, fragment, children;
+
+  switch(typeof result) {
+    case 'function':
+      result = document.createTextNode(result());
+      break;
+
+    case 'string':
+      container = document.createElement('div');
+      fragment  = document.createDocumentFragment();
+      container.innerHTML = result;
+      children = container.children;
+
+      if (children.length) {
+        for (var i = 0, len = children.length; i < len; i++) {
+          fragment.appendChild(children[i].cloneNode(true));
+        }
+        result = fragment;
+      } else {
+        result = document.createTextNode(result);
+      }
+      break;
+
+    case 'object':
+      if (!result.nodeType) {
+        result = JSON.stringify(result);
+        result = document.createTextNode(result);
+      }
+      break;
+
+    case 'default':
+      break;
+  }
+
+  return result;
+};
+
 Shortcode.prototype.parseOptions = function(stringOptions) {
   var options = {}, set;
   if (!stringOptions) { return; }
@@ -110,11 +162,11 @@ Shortcode.prototype.parseOptions = function(stringOptions) {
   return options;
 };
 
-Shortcode.prototype.escapeRegExp = function (str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+Shortcode.prototype.escapeTagRegExp = function(regex) {
+  return regex.replace(/[\[\]\/]/g, '\\$&');
 };
 
-Shortcode.prototype.template = function (s, d) {
+Shortcode.prototype.template = function(s, d) {
   for (var p in d) {
     s = s.replace(new RegExp('{' + p + '}','g'), d[p]);
   }
