@@ -150,7 +150,7 @@ describe('Shortcode', function() {
       note: function() {
         expect(this).toEqual({
           name: 'note',
-          tag: '[note text_color="" background_color="" border_color=""].*[/note]',
+          tag: '[note text_color="" background_color="" border_color=""][/note]',
           regex: '\\[note text_color="" background_color="" border_color=""\\]([\\s\\S]*?)\\[\\/note\\]',
           contents: 'This is a note.',
           options: {
