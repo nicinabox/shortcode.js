@@ -19,7 +19,6 @@ var toggleShortcode = function($el) {
           var text = $(el).text();
           var id = text.toLowerCase().replace(/\s/g, '-');
 
-          $(this).attr('id', id);
           $toc.find('ul').append(
             $('<li>').append($('<a>', {
               text: text,
