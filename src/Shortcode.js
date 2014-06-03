@@ -18,9 +18,6 @@
     this.tags    = tags || {};
     this.matches = [];
     this.nodes   = [];
-    this.regex   = '\\[({name})(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
-
-    instancesInNode = instancesInNode.bind(this);
 
     if (this.el.jquery) {
       this.el = this.el[0];
@@ -31,13 +28,14 @@
     this.replaceNodes();
   };
 
+  Shortcode.prototype.regex = '\\[({name})(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
+
   Shortcode.prototype.matchTags = function() {
     var match, instances, instance,
         text, nodes = textChildren(this.el);
 
-    console.log(this.tags)
     for (var i = 0, len = nodes.length; i < len; i++) {
-      instances = instancesInNode(nodes[i]);
+      instances = instancesInNode(nodes[i], this);
 
       for (var n = 0; n < instances.length; n++) {
         instance = matchInstance(instances[n], this.regex.replace('{name}', '\\w+'));
@@ -115,14 +113,13 @@
   };
 
   // Private methods
-  instancesInNode = function(node) {
+  instancesInNode = function(node, ref) {
     var text = node.textContent.trim(), instances = [], re;
 
-    console.log(this.tags)
-    for (var tag in this.tags) {
-      if (!this.tags.hasOwnProperty(tag)) { return; }
+    for (var tag in ref.tags) {
+      if (!ref.tags.hasOwnProperty(tag)) { return; }
 
-      re = this.regex.replace('{name}', tag);
+      re = ref.regex.replace('{name}', tag);
       re = new RegExp(re, 'g');
       instances.push(text.match(re) || []);
     }
