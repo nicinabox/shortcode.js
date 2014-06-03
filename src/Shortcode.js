@@ -9,7 +9,7 @@
 
 ;(function(window) {
   var parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
-      parseCallbackResult, textChildren;
+      parseCallbackResult, textChildren, createPlaceholder;
 
   var Shortcode = function(el, tags) {
     if (!el) { return; }
@@ -50,23 +50,20 @@
   };
 
   Shortcode.prototype.convertMatchesToNodes = function() {
-    var html, replacer, fragment,
+    var html, replacer, fragment, node,
         container = document.createElement('div');
 
     replacer = function(match, p1, p2, p3, p4, offset, string) {
       if (p1) {
         return match;
       } else {
-        var node = document.createElement('span');
-        node.setAttribute('data-sc-tag', this.tag);
-        node.className = 'sc-node sc-node-' + this.name;
-        return node.outerHTML;
+        return createPlaceholder(this).outerHTML;
       }
     };
 
     for (var i = 0, len = this.nodes.length; i < len; i++) {
-      var node = this.nodes[i];
-      html     = node.textContent;
+      node = this.nodes[i];
+      html = node.textContent;
 
       var parentNode = node.parentNode;
       if (!parentNode) { return; }
@@ -116,6 +113,13 @@
   };
 
   // Private methods
+  createPlaceholder = function(match) {
+    var node = document.createElement('span');
+    node.setAttribute('data-sc-tag', match.tag);
+    node.className = 'sc-node sc-node-' + match.name;
+    return node;
+  };
+
   textChildren = function(el) {
     var n, a=[], walk=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
     while(n = walk.nextNode()) {
