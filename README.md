@@ -25,9 +25,7 @@ Shortcode never replaces `innerHTML` and all event bindings are preserved.
 
 ## Features
 
-* Supports multiple tag instances
-* Supports single and start-end tags
-* Supports multi-line tags
+* Supports multiple tag instances, multi-line, nested, single, and start-end tags
 * Supports asynchronous callbacks
 * Supports DOM or jQuery selectors
 * Includes jQuery plugin definition
