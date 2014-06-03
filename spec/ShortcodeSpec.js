@@ -88,7 +88,7 @@ describe('Shortcode', function() {
       }
     });
 
-    expect($el.html()).toMatch('Hello world');
+    expect($el.html()).toEqual('Hello world');
   });
 
   it('does not replace instances in code or pre', function() {
@@ -101,12 +101,10 @@ describe('Shortcode', function() {
       }
     });
 
-    var html = '' +
-      '\n'+
+    var html = '\n' +
       '  <pre>[hello]</pre>\n' +
-      '  <code>[hello text="Hello world"]</code>\n' +
-      '\n' +
-      '  Hello world\n';
+      '  <code>[hello text="Hello world"]</code>' +
+      'Hello world';
 
     expect($el.html()).toEqual(html);
   });
@@ -131,13 +129,12 @@ describe('Shortcode', function() {
       }
     });
 
-    var html = '\n' +
-      '  \n' +
-      '  \n' +
-      '  123\n' +
-      '  Contents\n' +
+    var html = '' +
       '\n' +
-      '  Test\n';
+      '\n' +
+      '123\n' +
+      'Contents\n' +
+      'Test';
 
     expect($el.html()).toEqual(html);
   });
@@ -148,7 +145,7 @@ describe('Shortcode', function() {
 
     var sc = new Shortcode($el, {
       note: function() {
-        expect(this).toEqual({
+        expect(this).toMatch({
           name: 'note',
           tag: '[note text_color="" background_color="" border_color=""][/note]',
           regex: '\\[note text_color="" background_color="" border_color=""\\]([\\s\\S]*?)\\[\\/note\\]',
@@ -161,7 +158,7 @@ describe('Shortcode', function() {
         });
       },
       lightbox: function() {
-        expect(this).toEqual({
+        expect(this).toMatch({
           name: 'lightbox',
           tag: '[lightbox title="test" link_type="button" button_text="" button_color="#1eb492" text_color="#ffffff"][/lightbox]',
           regex: '\\[lightbox title="test" link_type="button" button_text="" button_color="#1eb492" text_color="#ffffff"\\]\\[\\/lightbox\\]',
@@ -211,7 +208,7 @@ describe('Shortcode', function() {
     });
 
     setTimeout(function() {
-      expect($el.html().trim()).toEqual('<button>Clicky</button><div>test</div>');
+      expect($el.html().trim()).toEqual('<button>Clicky</button>\n<div>test</div>');
       done();
     }, 1);
   });
@@ -283,7 +280,7 @@ describe('Shortcode', function() {
           $(this).attr('id', id);
         });
 
-        return '<div id="overview">Overview</div>';
+        return '<div class="overview">Overview</div>';
       }
     });
 
