@@ -151,7 +151,7 @@
 
     instance = {
       name: match[1],
-      tag: match[0],
+      tag: match[0].replace(/\]\s+\[/, ''),
       regex: escapeTagRegExp(tag),
       options: parseOptions(match[2]),
       contents: match[4] ? '' : undefined // Check for end tag
