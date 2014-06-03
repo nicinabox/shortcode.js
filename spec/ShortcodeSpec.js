@@ -175,6 +175,22 @@ describe('Shortcode', function() {
     });
   });
 
+  it('supports nested tags', function() {
+    loadFixtures('nested.html');
+    var $el = $('#nested');
+
+    var sc = new Shortcode($el, {
+      box: function() {},
+      overview: function() {},
+      hello: function() {}
+    });
+
+    var names = $.map(sc.matches, function(match) {
+      return match.name;
+    });
+    expect(names).toEqual(['box', 'overview', 'hello']);
+  });
+
   it('asynchronously replaces tag with matching object result', function(done) {
     loadFixtures('basic_with_options.html');
     var $el = $('#basic_with_options');
