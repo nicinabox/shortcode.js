@@ -38,14 +38,11 @@
       instances = instancesInNode(nodes[i], this);
 
       for (var n = 0; n < instances.length; n++) {
-        instance = matchInstance(instances[n], this.regex.replace('{name}', '\\w+'));
+        instance = matchInstance(instances[n], this.regex);
 
-        if (this.tags[instance.name]) {
-          this.matches.push(instance);
-          this.nodes.push(nodes[i]);
-        }
+        this.matches.push(instance);
+        this.nodes.push(nodes[i]);
       }
-
     }
   };
 
@@ -100,13 +97,19 @@
       match = this.matches[i];
       node  = document.querySelector('.sc-node-' + match.name);
 
-      if (node && node.dataset.scTag === match.tag) {
-        fn     = this.tags[match.name].bind(match);
-        done   = replacer.bind(match);
-        result = fn(done);
+      if (node) {
+        if (node.children.length) {
+          match.contents = node.innerHTML;
+        }
 
-        if (result !== undefined) {
-          done(result);
+        if (node.dataset.scTag === match.tag) {
+          fn     = this.tags[match.name].bind(match);
+          done   = replacer.bind(match);
+          result = fn(done);
+
+          if (result !== undefined) {
+            done(result);
+          }
         }
       }
     }
@@ -132,6 +135,11 @@
     var node = document.createElement('span');
     node.setAttribute('data-sc-tag', match.tag);
     node.className = 'sc-node sc-node-' + match.name;
+
+    if (match.contents) {
+      node.innerHTML = match.contents;
+    }
+
     return node;
   };
 
@@ -162,11 +170,11 @@
 
   matchInstance = function(tag, re) {
     var instance,
-        match = tag.match(new RegExp(re));
+        match = tag.match(new RegExp(re.replace('{name}', '\\w+')));
 
     instance = {
       name: match[1],
-      tag: match[0].replace(/\]\s+\[/, ''),
+      tag: match[0],
       regex: escapeTagRegExp(tag),
       options: parseOptions(match[2]),
       contents: match[4] ? '' : undefined // Check for end tag
@@ -174,7 +182,7 @@
 
     if (match[3]) { // contents
       instance.contents = match[3].trim();
-      instance.tag      = instance.tag.replace(instance.contents, '');
+      instance.tag      = instance.tag.replace(instance.contents, '').replace(/\][\s\n\r]+\[/, '][');
       instance.regex    = instance.regex.replace(instance.contents, '([\\s\\S]*?)');
     }
 

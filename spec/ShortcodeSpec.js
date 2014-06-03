@@ -181,15 +181,23 @@ describe('Shortcode', function() {
     var $el = $('#nested');
 
     var sc = new Shortcode($el, {
-      box: function() {},
-      overview: function() {},
-      hello: function() {}
+      box: function() {
+        return '<div>' + this.contents + '</div>';
+      },
+      overview: function() {
+        return this.options.title;
+      },
+      hello: function() {
+        return this.options.text;
+      }
     });
 
     var names = $.map(sc.matches, function(match) {
       return match.name;
     });
+
     expect(names).toEqual(['box', 'overview', 'hello']);
+    expect($el.html()).toEqual('<div>Contents\n    123</div>');
   });
 
   it('asynchronously replaces tag with matching object result', function(done) {
