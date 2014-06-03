@@ -8,17 +8,17 @@
 /* jshint strict: false, unused: false */
 
 ;(function(window) {
-  var template, parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
-      parseCallbackResult;
+  var parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
+      parseCallbackResult, textChildren;
 
   var Shortcode = function(el, tags) {
     if (!el) { return; }
 
     this.el      = el;
-    this.tags    = tags;
+    this.tags    = tags || {};
     this.matches = [];
     this.nodes   = [];
-    this.regex   = '\\[{name}(.*?)?\\](?:([\\s\\S]*?)(\\[\/{name}\\]))?';
+    this.regex   = '\\[(\\w+)(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
 
     if (this.el.jquery) {
       this.el = this.el[0];
@@ -30,37 +30,22 @@
   };
 
   Shortcode.prototype.matchTags = function() {
-    var match, instances, re, instance,
-        text, nodes = this.textChildren();
+    var match, instances, instance,
+        text, nodes = textChildren(this.el);
 
-    // Loop over each tag
-    for (var key in this.tags) {
-      if (!this.tags.hasOwnProperty(key)) { return; }
-      re = template(this.regex, { name: key });
+    for (var i = 0, len = nodes.length; i < len; i++) {
+      text      = nodes[i].textContent.trim();
+      instances = text.match(new RegExp(this.regex, 'g')) || [];
 
-      // Compare tag to each node
-      for (var i = 0, len = nodes.length; i < len; i++) {
-        text      = nodes[i].textContent.trim();
-        instances = text.match(new RegExp(re, 'g')) || [];
+      for (var n = 0; n < instances.length; n++) {
+        instance = matchInstance(instances[n], this.regex);
 
-        if (instances.length) {
+        if (this.tags[instance.name]) {
+          this.matches.push(instance);
           this.nodes.push(nodes[i]);
-        }
-
-        // Match on each instance
-        for (var j = 0, len2 = instances.length; j < len2; j++) {
-          this.nodes.push(nodes[i]);
-          instance = matchInstance(instances[j], re);
-
-          this.matches.push({
-            name: key,
-            tag: instance.tag,
-            regex: instance.regex,
-            options: instance.options,
-            contents: instance.contents
-          });
         }
       }
+
     }
   };
 
@@ -130,19 +115,15 @@
     }
   };
 
-  Shortcode.prototype.textChildren = function(regex) {
-    var n, a=[], walk=document.createTreeWalker(this.el, NodeFilter.SHOW_TEXT, null, false);
+  // Private methods
+  textChildren = function(el) {
+    var n, a=[], walk=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
     while(n = walk.nextNode()) {
-      if (regex && (regex).test(n)) {
-        a.push(n);
-      } else {
-        a.push(n);
-      }
+      a.push(n);
     }
     return a;
   };
 
-  // Private methods
   convertToFragment = function(el) {
     var fragment  = document.createDocumentFragment();
     var children = el.children;
@@ -160,27 +141,25 @@
     return fragment;
   };
 
-  matchInstance = function(instance, re) {
-    var match, contents, tag, regex, options;
+  matchInstance = function(tag, re) {
+    var instance,
+        match = tag.match(new RegExp(re));
 
-    match    = instance.match(new RegExp(re));
-    contents = match[3] ? '' : undefined;
-    tag      = match[0];
-    regex    = escapeTagRegExp(tag);
-    options  = parseOptions(match[1]);
+    instance = {
+      name: match[1],
+      tag: match[0],
+      regex: escapeTagRegExp(tag),
+      options: parseOptions(match[2]),
+      contents: match[4] ? '' : undefined // Check for end tag
+    };
 
-    if (match[2]) {
-      contents = match[2].trim();
-      tag      = tag.replace(contents, '');
-      regex    = regex.replace(contents, '([\\s\\S]*?)');
+    if (match[3]) { // contents
+      instance.contents = match[3].trim();
+      instance.tag      = instance.tag.replace(instance.contents, '');
+      instance.regex    = instance.regex.replace(instance.contents, '([\\s\\S]*?)');
     }
 
-    return {
-      tag: tag,
-      options: options,
-      contents: contents,
-      regex: regex
-    };
+    return instance;
   };
 
   parseCallbackResult = function(result) {
@@ -236,13 +215,6 @@
     }
 
     return options;
-  };
-
-  template = function(s, d) {
-    for (var p in d) {
-      s = s.replace(new RegExp('{' + p + '}','g'), d[p]);
-    }
-    return s;
   };
 
   // Polyfills
