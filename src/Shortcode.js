@@ -8,10 +8,10 @@
 /* jshint strict: false, unused: false */
 
 ;(function(window) {
-  var parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
+  var Shortcode, parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
       parseCallbackResult, textChildren, createPlaceholder;
 
-  var Shortcode = function(el, tags) {
+  Shortcode = function(el, tags) {
     if (!el) { return; }
 
     this.el      = el;
