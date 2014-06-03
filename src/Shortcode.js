@@ -9,7 +9,7 @@
 
 ;(function(window) {
   var Shortcode, parseOptions, escapeTagRegExp, matchInstance, convertToFragment,
-      parseCallbackResult, textChildren, createPlaceholder;
+      parseCallbackResult, textChildren, createPlaceholder, instancesInNode;
 
   Shortcode = function(el, tags) {
     if (!el) { return; }
@@ -18,7 +18,9 @@
     this.tags    = tags || {};
     this.matches = [];
     this.nodes   = [];
-    this.regex   = '\\[(\\w+)(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
+    this.regex   = '\\[({name})(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
+
+    instancesInNode = instancesInNode.bind(this);
 
     if (this.el.jquery) {
       this.el = this.el[0];
@@ -33,12 +35,12 @@
     var match, instances, instance,
         text, nodes = textChildren(this.el);
 
+    console.log(this.tags)
     for (var i = 0, len = nodes.length; i < len; i++) {
-      text      = nodes[i].textContent.trim();
-      instances = text.match(new RegExp(this.regex, 'g')) || [];
+      instances = instancesInNode(nodes[i]);
 
       for (var n = 0; n < instances.length; n++) {
-        instance = matchInstance(instances[n], this.regex);
+        instance = matchInstance(instances[n], this.regex.replace('{name}', '\\w+'));
 
         if (this.tags[instance.name]) {
           this.matches.push(instance);
@@ -113,6 +115,22 @@
   };
 
   // Private methods
+  instancesInNode = function(node) {
+    var text = node.textContent.trim(), instances = [], re;
+
+    console.log(this.tags)
+    for (var tag in this.tags) {
+      if (!this.tags.hasOwnProperty(tag)) { return; }
+
+      re = this.regex.replace('{name}', tag);
+      re = new RegExp(re, 'g');
+      instances.push(text.match(re) || []);
+    }
+
+    instances = [].concat.apply([], instances);
+    return instances;
+  };
+
   createPlaceholder = function(match) {
     var node = document.createElement('span');
     node.setAttribute('data-sc-tag', match.tag);

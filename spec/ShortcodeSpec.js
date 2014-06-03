@@ -33,8 +33,9 @@ describe('Shortcode', function() {
 
   it('matches defined tags', function() {
     loadFixtures('basic.html');
+    var $el = $('#basic');
 
-    var sc = new Shortcode($('#basic'), {
+    var sc = new Shortcode($el, {
       hello: function() {
         return ['Hello', 'world'].join(' ');
       }
