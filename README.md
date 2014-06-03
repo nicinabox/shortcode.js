@@ -17,7 +17,11 @@ new Shortcode(document.querySelector('body'), {
 });
 ```
 
-Tip: Because shortcode replaces an element's html, you will lose existing event bindings inside that element. Use delegated bindings where possible and call shortcode at the start of your code.
+## How it works
+
+Shortcode looks for text nodes in the DOM that match defined tags. If it matches, that text node replaced with a placeholder node (span). This allows for asychronous replacements from the tag method. When your tag method finishes, it's return value will replace the placeholder span.
+
+Shortcode never replaces `innerHTML` and all event bindings are preserved.
 
 ## Features
 
@@ -28,6 +32,7 @@ Tip: Because shortcode replaces an element's html, you will lose existing event 
 * Supports DOM or jQuery selectors
 * Includes jQuery plugin definition
 * Ignores tags inside `pre` and `code`
+* Uses node-based matching and replacement
 * Tested with Jasmine
 
 ## Supported browsers
