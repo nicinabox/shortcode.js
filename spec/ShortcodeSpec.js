@@ -196,8 +196,8 @@ describe('Shortcode', function() {
       return match.name;
     });
 
-    expect(names).toEqual(['box', 'overview', 'hello']);
-    expect($el.html()).toEqual('<div>Contents\n    123</div>');
+    expect(names).toEqual(['box', 'overview', 'hello', 'hello']);
+    expect($el.html()).toEqual('<div>Contents</div>\n123\n123');
   });
 
   it('asynchronously replaces tag with matching object result', function(done) {

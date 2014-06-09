@@ -18,6 +18,7 @@
     this.tags    = tags || {};
     this.matches = [];
     this.nodes   = [];
+    this.regex   = this.baseRegex + this.extendedRegex;
 
     if (this.el.jquery) {
       this.el = this.el[0];
@@ -28,7 +29,8 @@
     this.replaceNodes();
   };
 
-  Shortcode.prototype.regex = '\\[({name})(.*?)?\\](?:([\\s\\S]*?)(\\[\/\\1\\]))*';
+  Shortcode.prototype.baseRegex = '\\[({name})([\\s\\S]*?)\\]';
+  Shortcode.prototype.extendedRegex = '(?:((?!\\s?\\[\\1)[\\s\\S]*?)(\\[\/\\1\\]))?';
 
   Shortcode.prototype.matchTags = function() {
     var match, instances, instance,
@@ -37,11 +39,15 @@
     for (var i = 0, len = nodes.length; i < len; i++) {
       instances = instancesInNode(nodes[i], this);
 
-      for (var n = 0; n < instances.length; n++) {
-        instance = matchInstance(instances[n], this.regex);
+      for (var name in instances) {
+        if (!instances.hasOwnProperty(name)) { return; }
 
-        this.matches.push(instance);
-        this.nodes.push(nodes[i]);
+        for (var n = 0; n < instances[name].length; n++) {
+          instance = matchInstance(instances[name][n], name, this.regex);
+
+          this.matches.push(instance);
+          this.nodes.push(nodes[i]);
+        }
       }
     }
   };
@@ -117,17 +123,20 @@
 
   // Private methods
   instancesInNode = function(node, ref) {
-    var text = node.textContent.trim(), instances = [], re;
+    var text = node.textContent.trim(), instances = {}, re;
 
     for (var tag in ref.tags) {
       if (!ref.tags.hasOwnProperty(tag)) { return; }
 
       re = ref.regex.replace('{name}', tag);
       re = new RegExp(re, 'g');
-      instances.push(text.match(re) || []);
+
+      var m = text.match(re);
+      if (m) {
+        instances[tag] = m;
+      }
     }
 
-    instances = [].concat.apply([], instances);
     return instances;
   };
 
@@ -168,9 +177,10 @@
     return fragment;
   };
 
-  matchInstance = function(tag, re) {
+  matchInstance = function(tag, name, regex) {
     var instance,
-        match = tag.match(new RegExp(re.replace('{name}', '\\w+')));
+        re = regex.replace('{name}', name),
+        match = tag.match(new RegExp(re));
 
     instance = {
       name: match[1],
