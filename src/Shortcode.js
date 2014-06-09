@@ -182,6 +182,8 @@
         re = regex.replace('{name}', name),
         match = tag.match(new RegExp(re));
 
+    console.log(match)
+
     instance = {
       name: match[1],
       tag: match[0],
@@ -193,8 +195,11 @@
     if (match[3]) { // contents
       instance.contents = match[3].trim();
       instance.tag      = instance.tag.replace(instance.contents, '').replace(/\][\s\n\r]+\[/, '][');
-      instance.regex    = instance.regex.replace(instance.contents, '([\\s\\S]*?)');
+      instance.regex    = escapeTagRegExp(tag.replace(instance.contents, '<placeholder>'));
+      instance.regex    = instance.regex.replace('<placeholder>', '([\\s\\S]*?)')
+                                        .replace(/\n\s+/g, '');
     }
+
 
     return instance;
   };

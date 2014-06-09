@@ -110,6 +110,59 @@ describe('Shortcode', function() {
     expect($el.html()).toEqual(html);
   });
 
+  it('supports many formats', function() {
+    loadFixtures('formats.html');
+    var $el = $('#formats');
+    var sc = new Shortcode($el, {
+      box: function() {}
+    });
+
+    expect(sc.matches).toEqual([
+      {
+        name: 'box',
+        tag: '[box]',
+        regex: '\\[box\\]',
+        options: undefined,
+        contents: undefined
+      },
+      {
+        name: 'box',
+        tag: '[box border=1]',
+        regex: '\\[box border=1\\]',
+        options: { border: '1' },
+        contents: undefined
+      },
+      {
+        name: 'box',
+        tag: '[box border=1][/box]',
+        regex: '\\[box border=1\\]([\\s\\S]*?)\\[\\/box\\]',
+        options: { border: '1' },
+        contents: 'test'
+      },
+      {
+        name: 'box',
+        tag: '[box border=1][/box]',
+        regex: '\\[box border=1\\]\\[\\/box\\]',
+        options: { border: '1' },
+        contents: ''
+      },
+      {
+        name: 'box',
+        tag: '[box border=1][/box]',
+        regex: '\\[box border=1\\]([\\s\\S]*?)\\[\\/box\\]',
+        options: { border: '1' },
+        contents: '[contents]'
+      },
+      {
+        name: 'box',
+        tag: '[box border=1][/box]',
+        regex: '\\[box border=1\\]([\\s\\S]*?)\\[\\/box\\]',
+        options: { border: '1' },
+        contents: '1\n   test\n    [contents]'
+      }
+  ]);
+  });
+
   it('supports multiple instances', function() {
     loadFixtures('multiple.html');
     var $el = $('#multiple');
