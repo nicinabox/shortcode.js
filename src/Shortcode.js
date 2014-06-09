@@ -30,7 +30,7 @@
   };
 
   Shortcode.prototype.baseRegex = '\\[({name})([\\s\\S]*?)\\]';
-  Shortcode.prototype.extendedRegex = '(?:((?!\\s?\\[\\1)[\\s\\S]*?)(\\[\/\\1\\]))?';
+  Shortcode.prototype.extendedRegex = '(?:((?!\\s*?\\[\\1)[\\s\\S]*?)(\\[\/\\1\\]))?';
 
   Shortcode.prototype.matchTags = function() {
     var match, instances, instance,
