@@ -114,7 +114,8 @@ describe('Shortcode', function() {
     loadFixtures('formats.html');
     var $el = $('#formats');
     var sc = new Shortcode($el, {
-      box: function() {}
+      box: function() {},
+      contents: function() {}
     });
 
     expect(sc.matches).toEqual([
@@ -159,8 +160,36 @@ describe('Shortcode', function() {
         regex: '\\[box border=1\\]([\\s\\S]*?)\\[\\/box\\]',
         options: { border: '1' },
         contents: '1\n   test\n    [contents]'
+      },
+      {
+        name: 'box',
+        tag: '[box border=1][/box]',
+        regex: '\\[box border=1\\]([\\s\\S]*?)\\[\\/box\\]',
+        options: { border: '1' },
+        contents: '[contents][/contents]'
+      },
+      {
+        name: 'contents',
+        tag: '[contents]',
+        regex: '\\[contents\\]',
+        options: undefined,
+        contents: undefined
+      },
+      {
+        name: 'contents',
+        tag: '[contents]',
+        regex: '\\[contents\\]',
+        options: undefined,
+        contents: undefined
+      },
+      {
+        name: 'contents',
+        tag: '[contents][/contents]',
+        regex: '\\[contents\\]\\[\\/contents\\]',
+        options: undefined,
+        contents: ''
       }
-  ]);
+    ]);
   });
 
   it('supports multiple instances', function() {
