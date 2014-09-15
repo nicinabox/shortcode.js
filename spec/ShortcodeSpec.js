@@ -111,6 +111,24 @@ describe('Shortcode', function() {
     expect($el.html()).toEqual(html);
   });
 
+  it('supports question mark in content', function() {
+    loadFixtures('question.html');
+
+    var sc = new Shortcode($('#question'), {
+      question: function() {
+        return this.contents;
+      }
+    });
+
+    expect(sc.matches).toEqual([{
+      name: 'question',
+      tag: '[question][/question]',
+      regex: '\\[question\\]([\\s\\S]*?)\\[\\/question\\]',
+      contents: 'Hello?',
+      options: undefined
+    }]);
+  });
+
   it('supports multiple instances', function() {
     loadFixtures('multiple.html');
     var $el = $('#multiple');
