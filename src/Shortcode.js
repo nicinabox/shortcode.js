@@ -13,7 +13,9 @@ var Shortcode = function(el, tags) {
   this.el      = el;
   this.tags    = tags;
   this.matches = [];
-  this.regex   = '\\[{name}([\\s\\S]*?)\\](?:([\\s\\S]*?)(\\[\/{name}\\]))?';
+  this.regex   = '\\[{name}(\\s[\\s\\S]*?)?\\]' +
+    '(?:((?!\\s*?(?:\\[{name}|\\[\\/(?!{name})))[\\s\\S]*?)' +
+    '(\\[\/{name}\\]))?';
 
   if (this.el.jquery) {
     this.el = this.el[0];
@@ -42,8 +44,9 @@ Shortcode.prototype.matchTags = function() {
 
       if (match[2]) {
         contents = match[2].trim();
-        tag      = tag.replace(contents, '');
-        regex    = regex.replace(contents, '([\\s\\S]*?)');
+        tag      = tag.replace(contents, '').replace(/\s/g, '');
+        regex    = regex.replace(contents, '([\\s\\S]*?)')
+                        .replace(/\s/g, '');
       }
 
       this.matches.push({

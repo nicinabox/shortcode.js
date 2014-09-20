@@ -117,6 +117,9 @@ describe('Shortcode', function() {
     var sc = new Shortcode($('#question'), {
       question: function() {
         return this.contents;
+      },
+      questionB: function() {
+        return this.contents;
       }
     });
 
@@ -125,6 +128,13 @@ describe('Shortcode', function() {
       tag: '[question][/question]',
       regex: '\\[question\\]([\\s\\S]*?)\\[\\/question\\]',
       contents: 'Hello?',
+      options: undefined
+    },
+    {
+      name: 'questionB',
+      tag: '[questionB][/questionB]',
+      regex: '\\[questionB\\]([\\s\\S]*?)\\[\\/questionB\\]',
+      contents: 'Is anyone there?',
       options: undefined
     }]);
   });
