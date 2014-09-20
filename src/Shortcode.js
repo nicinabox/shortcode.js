@@ -85,7 +85,7 @@ Shortcode.prototype.convertMatchesToNodes = function() {
 
 Shortcode.prototype.replaceNodes = function() {
   var self = this, html, match, result, done, node, fn, replacer,
-      nodes = document.querySelectorAll('.sc-node');
+      nodes = this.el.querySelectorAll('.sc-node');
 
   replacer = function(result) {
     if (result.jquery) { result = result[0]; }
@@ -96,7 +96,7 @@ Shortcode.prototype.replaceNodes = function() {
 
   for (var i = 0, len = this.matches.length; i < len; i++) {
     match = this.matches[i];
-    node  = document.querySelector('.sc-node-' + match.name);
+    node  = this.el.querySelector('.sc-node-' + match.name);
 
     if (node && node.dataset.scTag === match.tag) {
       fn     = this.tags[match.name].bind(match);
