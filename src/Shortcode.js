@@ -45,8 +45,7 @@ Shortcode.prototype.matchTags = function() {
       if (match[2]) {
         contents = match[2].trim();
         tag      = tag.replace(contents, '').replace(/\n\s*/g, '');
-        regex    = regex.replace(contents, '([\\s\\S]*?)')
-                        .replace(/\n\s*/g, '');
+        regex    = this.escapeTagRegExp(tag).replace('\\]\\[', '\\]([\\s\\S]*?)\\[');
       }
 
       this.matches.push({
@@ -122,7 +121,7 @@ Shortcode.prototype.parseCallbackResult = function(result) {
       container = document.createElement('div');
       fragment  = document.createDocumentFragment();
       container.innerHTML = result;
-      children = container.children;
+      children = container.childNodes;
 
       if (children.length) {
         for (var i = 0, len = children.length; i < len; i++) {

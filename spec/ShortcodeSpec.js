@@ -139,6 +139,19 @@ describe('Shortcode', function() {
     }]);
   });
 
+  it('supports mixed content', function() {
+    loadFixtures('mixed_content.html');
+    var $el = $('#mixed_content');
+
+    var sc = new Shortcode($el, {
+      mixed: function() {
+        return this.contents;
+      }
+    });
+
+    expect($el.html()).toEqual('\n  <a href="#">Hello</a>\n    Mixed content\n');
+  });
+
   it('supports multiple instances', function() {
     loadFixtures('multiple.html');
     var $el = $('#multiple');
