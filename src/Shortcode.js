@@ -44,9 +44,9 @@ Shortcode.prototype.matchTags = function() {
 
       if (match[2]) {
         contents = match[2].trim();
-        tag      = tag.replace(contents, '').replace(/\s/g, '');
+        tag      = tag.replace(contents, '').replace(/\n\s*/g, '');
         regex    = regex.replace(contents, '([\\s\\S]*?)')
-                        .replace(/\s/g, '');
+                        .replace(/\n\s*/g, '');
       }
 
       this.matches.push({
