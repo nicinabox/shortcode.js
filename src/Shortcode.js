@@ -165,7 +165,7 @@ Shortcode.prototype.parseOptions = function(stringOptions) {
 };
 
 Shortcode.prototype.escapeTagRegExp = function(regex) {
-  return regex.replace(/[\[\]\/]/g, '\\$&');
+  return regex.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 };
 
 Shortcode.prototype.template = function(s, d) {
